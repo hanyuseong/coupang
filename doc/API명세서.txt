@@ -1,0 +1,260 @@
+0. Auth / Login / Signup
+🔹 POST /api/auth/signup – 회원가입
+Request
+{
+  "email": "user@example.com",
+  "password": "1234!abcd",
+  "name": "홍길동",
+  "phone": "01012345678"
+}
+
+Response
+{
+  "memberId": 1,
+  "email": "user@example.com"
+}
+
+🔹 POST /api/auth/login
+Request
+{
+  "email": "user@example.com",
+  "password": "1234!abcd"
+}
+
+Response
+{
+  "accessToken": "JWT-ACCESS-TOKEN",
+  "refreshToken": "JWT-REFRESH-TOKEN"
+}
+
+🔹 POST /api/auth/refresh
+Request
+{
+  "refreshToken": "xxxxx"
+}
+
+Response
+{
+  "accessToken": "new-access-token"
+}
+
+1. 회원(Member) / 주소록(Address)
+🔹 GET /api/members/me – 내 정보 조회
+Response
+{
+  "memberId": 1,
+  "email": "user@example.com",
+  "name": "홍길동",
+  "phone": "01012345678",
+  "status": "ACTIVE"
+}
+
+🔹 PUT /api/members/me – 회원 수정
+Request
+{
+  "name": "홍길동",
+  "phone": "01099998888"
+}
+
+🔹 GET /api/members/me/addresses – 주소 목록 조회
+Response
+[
+  {
+    "addressId": 10,
+    "receiverName": "홍길동",
+    "receiverPhone": "01033334444",
+    "zipcode": "06011",
+    "addr1": "서울시 강남구",
+    "addr2": "101동 501호",
+    "isDefault": true
+  }
+]
+
+🔹 POST /api/members/me/addresses – 주소 등록
+Request
+{
+  "receiverName": "홍길동",
+  "receiverPhone": "01033334444",
+  "zipcode": "06011",
+  "addr1": "서울시 강남구",
+  "addr2": "101동 501호",
+  "isDefault": true
+}
+
+🔹 PUT /api/members/me/addresses/{addressId} – 주소 수정
+🔹 DELETE /api/members/me/addresses/{addressId} – 주소 삭제
+2. 카테고리(Category)
+🔹 GET /api/categories – 카테고리 목록
+Response
+[
+  {
+    "categoryId": 1,
+    "name": "패션",
+    "depth": 1,
+    "children": [
+      {
+        "categoryId": 2,
+        "name": "남성 패션",
+        "depth": 2
+      }
+    ]
+  }
+]
+
+3. 상품(Product)
+🔹 GET /api/products – 상품 목록 조회
+Query Parameters
+categoryId=10
+sort=popular | latest | priceAsc | priceDesc
+minPrice=0
+maxPrice=30000
+page=1
+size=20
+
+Response
+{
+  "content": [
+    {
+      "productId": 100,
+      "name": "나이키 에어포스",
+      "price": 129000,
+      "discountPrice": 99000,
+      "thumbnail": "image1.jpg",
+      "rating": 4.5,
+      "reviewCount": 230,
+      "deliveryType": "ROCKET"
+    }
+  ],
+  "page": 1,
+  "totalPages": 10
+}
+
+🔹 GET /api/products/{productId} – 상품 상세 조회
+Response
+{
+  "productId": 100,
+  "name": "나이키 에어포스",
+  "brand": "Nike",
+  "price": 129000,
+  "discountPrice": 99000,
+  "images": ["1.jpg", "2.jpg"],
+  "optionGroups": [
+    {
+      "groupId": 1,
+      "name": "색상",
+      "options": [
+        { "optionId": 10, "value": "White" },
+        { "optionId": 11, "value": "Black" }
+      ]
+    }
+  ],
+  "description": "<p>상품 상세 설명</p>"
+}
+
+🔹 GET /api/products/{productId}/reviews – 리뷰 목록
+🔹 GET /api/products/{productId}/qna – 문의 목록
+4. 장바구니(Cart)
+🔹 GET /api/cart – 장바구니 조회
+Response
+{
+  "cartItems": [
+    {
+      "cartItemId": 1,
+      "productId": 100,
+      "name": "나이키 에어포스",
+      "quantity": 2,
+      "price": 99000,
+      "option": "White / 270"
+    }
+  ],
+  "totalAmount": 198000,
+  "deliveryFee": 0
+}
+
+🔹 POST /api/cart – 장바구니 담기
+Request
+{
+  "productId": 100,
+  "optionStockId": 55,
+  "quantity": 2
+}
+
+🔹 PUT /api/cart/{cartItemId} – 수량 변경
+🔹 DELETE /api/cart/{cartItemId} – 삭제
+5. 주문(Order)
+🔹 POST /api/orders – 주문 생성(주문서 작성 완료)
+Request
+{
+  "addressId": 10,
+  "couponId": 1,
+  "items": [
+    {
+      "productId": 100,
+      "optionStockId": 55,
+      "quantity": 2
+    }
+  ]
+}
+
+Response
+{
+  "orderId": 20001,
+  "totalAmount": 198000,
+  "deliveryFee": 0
+}
+
+🔹 GET /api/orders/{orderId} – 주문 상세 조회
+🔹 GET /api/orders – 주문 목록(마이페이지)
+6. 결제(Payment)
+🔹 POST /api/payments/ready – PG 결제 준비
+Request
+{
+  "orderId": 20001,
+  "method": "CARD"
+}
+
+Response
+{
+  "pgRedirectUrl": "https://pay.kakao.com/xxx",
+  "tid": "PG-TID-123"
+}
+
+🔹 POST /api/payments/approve – 결제 승인
+
+(PG에서 callback 또는 클라이언트에서 approve 호출)
+
+Request
+{
+  "orderId": 20001,
+  "pgToken": "abcd1234"
+}
+
+7. 리뷰(Review)
+🔹 POST /api/reviews – 리뷰 작성
+Request
+{
+  "orderItemId": 30001,
+  "productId": 100,
+  "rating": 5,
+  "content": "아주 좋아요!",
+  "images": ["xxx.jpg"]
+}
+
+8. QnA(Product Question)
+🔹 POST /api/products/{productId}/qna – 문의 작성
+{
+  "question": "이 상품 재입고 언제인가요?",
+  "isPrivate": false
+}
+
+9. 쿠폰 / 포인트
+🔹 GET /api/members/me/coupons
+🔹 GET /api/members/me/points
+10. 관리자(Admin)
+🔹 POST /api/admin/products – 상품 등록
+🔹 PUT /api/admin/products/{productId} – 상품 수정
+🔹 DELETE /api/admin/products/{productId} – 삭제
+🔹 GET /api/admin/orders – 주문 관리 목록
+🔹 PUT /api/admin/orders/{orderId}/delivery – 송장 입력
+🔹 POST /api/admin/banners – 배너 등록
+🔹 PUT /api/admin/banners/{id}

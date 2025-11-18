@@ -1,0 +1,227 @@
+🧱 이커머스 쇼핑몰 DB 테이블 설계 (ERD 구조)
+________________________________________
+1. 회원 / 인증
+📌 member
+column	type	desc
+member_id (PK)	BIGINT	회원 PK
+email	VARCHAR(255)	unique
+password	VARCHAR(255)	해시된 비번
+name	VARCHAR(50)	
+phone	VARCHAR(20)	
+status	ENUM(ACTIVE, INACTIVE, DELETED)	회원 상태
+created_at	DATETIME	
+updated_at	DATETIME	
+________________________________________
+📌 member_address
+column	type	desc
+address_id (PK)	BIGINT	
+member_id (FK)	BIGINT	
+receiver_name	VARCHAR(50)	
+receiver_phone	VARCHAR(20)	
+zipcode	VARCHAR(10)	
+addr1	VARCHAR(255)	
+addr2	VARCHAR(255)	
+is_default	TINYINT(1)	
+created_at	DATETIME	
+________________________________________
+📌 member_social
+column	type	desc
+social_id (PK)	BIGINT	
+member_id	BIGINT	
+provider	ENUM('kakao', 'naver', 'google', 'apple')	
+provider_id	VARCHAR(255)	
+________________________________________
+________________________________________
+2. 카테고리 / 메뉴
+📌 category
+column	type	desc
+category_id (PK)	BIGINT	
+parent_id (FK)	BIGINT NULL	상위 카테고리
+name	VARCHAR(100)	
+depth	INT	1~3
+sort_order	INT	
+________________________________________
+3. 상품(Product)
+📌 product
+column	type	desc
+product_id (PK)	BIGINT	
+category_id (FK)	BIGINT	
+name	VARCHAR(255)	
+description	TEXT	
+brand	VARCHAR(100)	
+price	INT	판매가
+discount_price	INT NULL	할인 시
+stock	INT	(옵션 없을 때 단일 재고)
+status	ENUM('ACTIVE', 'INACTIVE', 'DELETED')	
+created_at	DATETIME	
+updated_at	DATETIME	
+________________________________________
+📌 product_option_group
+(예: 색상, 사이즈)
+column	type	desc
+option_group_id (PK)	BIGINT	
+product_id (FK)	BIGINT	
+name	VARCHAR(100)	
+________________________________________
+📌 product_option
+(옵션 값: 블랙/M, 블랙/L 등)
+column	type	desc
+option_id (PK)	BIGINT	
+option_group_id (FK)	BIGINT	
+value	VARCHAR(100)	
+________________________________________
+📌 product_option_stock
+(옵션별 재고)
+column	type	desc
+option_stock_id (PK)	BIGINT	
+product_id (FK)	BIGINT	
+option1_id	BIGINT	
+option2_id	BIGINT NULL	
+option3_id	BIGINT NULL	
+stock	INT	
+price	INT	옵션별 가격
+※ 옵션 조합을 1~3 depth로 확장 가능하게 설계
+________________________________________
+📌 product_image
+column	type
+image_id (PK)	BIGINT
+product_id (FK)	BIGINT
+image_url	VARCHAR(255)
+sort_order	INT
+________________________________________
+4. 리뷰 / QnA
+📌 review
+column	type	desc
+review_id (PK)	BIGINT	
+product_id (FK)	BIGINT	
+member_id (FK)	BIGINT	
+order_item_id (FK)	BIGINT	구매자 인증
+rating	TINYINT	1~5
+content	TEXT	
+created_at	DATETIME	
+________________________________________
+📌 review_image
+column	type
+review_image_id (PK)	BIGINT
+review_id (FK)	BIGINT
+image_url	VARCHAR(255)
+________________________________________
+📌 product_qna
+column	type
+qna_id (PK)	BIGINT
+product_id	BIGINT
+member_id	BIGINT
+question	TEXT
+answer	TEXT NULL
+is_private	TINYINT(1)
+created_at	DATETIME
+answered_at	DATETIME NULL
+________________________________________
+5. 장바구니
+📌 cart
+column	type
+cart_id (PK)	BIGINT
+member_id	BIGINT
+created_at	DATETIME
+________________________________________
+📌 cart_item
+column	type
+cart_item_id (PK)	BIGINT
+cart_id	BIGINT
+product_id	BIGINT
+option_stock_id	BIGINT NULL
+quantity	INT
+price	INT
+________________________________________
+6. 주문(Order)
+📌 order
+column	type
+order_id (PK)	BIGINT
+member_id (FK)	BIGINT
+address_id	BIGINT
+order_status	ENUM('PENDING', 'PAID', 'SHIPPING', 'DELIVERED', 'CANCELLED')
+payment_status	ENUM('READY', 'SUCCESS', 'FAILED')
+total_amount	INT
+delivery_fee	INT
+created_at	DATETIME
+paid_at	DATETIME NULL
+________________________________________
+📌 order_item
+column	type
+order_item_id (PK)	BIGINT
+order_id (FK)	BIGINT
+product_id	BIGINT
+option_stock_id	BIGINT NULL
+quantity	INT
+price	INT
+discount_price	INT
+________________________________________
+📌 order_delivery
+column	type
+delivery_id (PK)	BIGINT
+order_id	BIGINT
+delivery_status	ENUM('READY', 'SHIPPING', 'DELIVERED')
+tracking_number	VARCHAR(50)
+courier	VARCHAR(50)
+updated_at	DATETIME
+________________________________________
+7. 결제(PG)
+📌 payment
+column	type
+payment_id (PK)	BIGINT
+order_id	BIGINT
+pg_provider	VARCHAR(50)
+method	ENUM('CARD', 'KAKAO', 'NAVER', 'VBANK', 'PHONE')
+amount	INT
+status	ENUM('READY', 'SUCCESS', 'FAILED')
+pg_tid	VARCHAR(100)
+requested_at	DATETIME
+approved_at	DATETIME
+________________________________________
+8. 쿠폰/포인트
+📌 coupon
+column	type
+coupon_id (PK)	BIGINT
+name	VARCHAR(100)
+discount_amount	INT
+min_purchase	INT
+expires_at	DATETIME
+________________________________________
+📌 member_coupon
+column	type
+member_coupon_id	BIGINT
+member_id	BIGINT
+coupon_id	BIGINT
+is_used	TINYINT
+used_at	DATETIME NULL
+________________________________________
+📌 point_history
+column	type
+point_id (PK)	BIGINT
+member_id	BIGINT
+amount	INT
+type	ENUM('EARN', 'USE')
+description	VARCHAR(255)
+created_at	DATETIME
+________________________________________
+9. 배너/이벤트
+📌 banner
+column	type
+banner_id (PK)	BIGINT
+title	VARCHAR(255)
+image_url	VARCHAR(255)
+link_url	VARCHAR(255)
+sort_order	INT
+is_active	TINYINT
+started_at	DATETIME
+ended_at	DATETIME
+________________________________________
+10. 관리자 (백오피스)
+📌 admin_user
+column	type
+admin_id	BIGINT
+email	VARCHAR(255)
+password	VARCHAR(255)
+role	ENUM('ADMIN', 'MANAGER')
+created_at	DATETIME
+
