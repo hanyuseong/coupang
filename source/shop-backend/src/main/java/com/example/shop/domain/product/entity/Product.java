@@ -1,8 +1,8 @@
-package com.example.shop.domain.product.entity;
+﻿package com.example.shop.domain.product.entity;
 
 import com.example.shop.global.common.BaseEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity

@@ -1,11 +1,11 @@
-package com.example.shop.domain.review.entity;
+﻿package com.example.shop.domain.review.entity;
 
 import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.member.entity.Member;
 import com.example.shop.domain.product.entity.Product;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "review")

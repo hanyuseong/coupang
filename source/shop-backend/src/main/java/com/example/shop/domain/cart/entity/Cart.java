@@ -1,8 +1,8 @@
-package com.example.shop.domain.cart.entity;
+﻿package com.example.shop.domain.cart.entity;
 
 import com.example.shop.global.common.BaseEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

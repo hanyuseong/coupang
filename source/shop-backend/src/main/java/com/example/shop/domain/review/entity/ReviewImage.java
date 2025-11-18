@@ -1,11 +1,11 @@
-package com.example.shop.domain.review.entity;
+﻿package com.example.shop.domain.review.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Getter

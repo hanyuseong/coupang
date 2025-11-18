@@ -1,10 +1,10 @@
-package com.example.shop.domain.order.entity;
+﻿package com.example.shop.domain.order.entity;
 
 import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.member.entity.Member;
 import com.example.shop.domain.order.enums.OrderStatus;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 

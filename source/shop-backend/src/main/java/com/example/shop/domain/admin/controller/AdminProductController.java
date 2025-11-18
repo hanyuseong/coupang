@@ -1,4 +1,4 @@
-package com.example.shop.domain.admin.controller;
+﻿package com.example.shop.domain.admin.controller;
 
 import com.example.shop.global.common.ApiResponse;
 import com.example.shop.domain.product.dto.ProductDto;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/admin/products")

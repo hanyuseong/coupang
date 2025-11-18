@@ -1,8 +1,8 @@
-package com.example.shop.domain.cart.entity;
+﻿package com.example.shop.domain.cart.entity;
 
 import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.product.entity.Product;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cart_item")

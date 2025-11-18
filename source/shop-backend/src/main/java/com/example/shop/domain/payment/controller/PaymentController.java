@@ -1,4 +1,4 @@
-package com.example.shop.domain.payment.controller;
+﻿package com.example.shop.domain.payment.controller;
 
 import com.example.shop.global.common.ApiResponse;
 import com.example.shop.domain.payment.dto.PaymentDto;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/payments")
