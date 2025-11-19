@@ -1,4 +1,4 @@
-﻿package com.example.shop.global.exception;
+package com.example.shop.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.review.controller;
+package com.example.shop.domain.review.controller;
 
 import com.example.shop.global.common.ApiResponse;
 import com.example.shop.domain.review.dto.ReviewDto;

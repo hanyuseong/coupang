@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.product.service.impl;
+package com.example.shop.domain.product.service.impl;
 
 import com.example.shop.domain.product.dto.ProductDto;
 import com.example.shop.domain.product.entity.Product;
@@ -6,46 +6,86 @@ import com.example.shop.domain.product.repository.ProductRepository;
 import com.example.shop.domain.product.service.ProductService;
 import com.example.shop.global.exception.BusinessException;
 import com.example.shop.global.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    @Override
+    @Transactional
+    public ProductDto createProduct(ProductDto productDto) {
+        Product product = Product.builder()
+                .name(productDto.getName())
+                .description(productDto.getDescription())
+                .brand(productDto.getBrand())
+                .price(productDto.getPrice())
+                .discountPrice(productDto.getDiscountPrice())
+                .build();
+        return toDto(productRepository.save(product));
+    }
+
+    @Override
+    @Transactional
+    public ProductDto updateProduct(Long productId, ProductDto productDto) {
+        Product product = findProduct(productId);
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setBrand(productDto.getBrand());
+        product.setPrice(productDto.getPrice());
+        product.setDiscountPrice(productDto.getDiscountPrice());
+        return toDto(product);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = findProduct(productId);
+        productRepository.delete(product);
     }
 
     @Override
     public List<ProductDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(this::convertToDto)
-                .toList();
+        return productRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public ProductDto getProductById(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
-        return convertToDto(product);
+    public ProductDto getProduct(Long productId) {
+        return toDto(findProduct(productId));
     }
 
-    private ProductDto convertToDto(Product product) {
-        return new ProductDto(
-                product.getProductId(),
-                product.getName(),
-                product.getPrice(),
-                product.getDiscountPrice(),
-                product.getDescription(),
-                product.getBrand(),
-                product.getImages() // Assuming Product has a method to get images
-        );
+    @Override
+    public Page<ProductDto> getProductList(Long categoryId, String sort, Integer minPrice, Integer maxPrice, Pageable pageable) {
+        // Filtering/Sorting 로직은 추후 구현
+        return productRepository.findAll(pageable).map(this::toDto);
+    }
+
+    private Product findProduct(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    private ProductDto toDto(Product product) {
+        return ProductDto.builder()
+                .productId(product.getProductId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .discountPrice(product.getDiscountPrice())
+                .brand(product.getBrand())
+                .description(product.getDescription())
+                .build();
     }
 }
+

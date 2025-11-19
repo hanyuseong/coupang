@@ -1,4 +1,4 @@
-﻿package com.example.shop.infrastructure.email;
+package com.example.shop.infrastructure.email;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

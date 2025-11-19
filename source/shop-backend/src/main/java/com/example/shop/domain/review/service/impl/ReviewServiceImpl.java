@@ -1,5 +1,7 @@
-﻿package com.example.shop.domain.review.service.impl;
+package com.example.shop.domain.review.service.impl;
 
+import com.example.shop.domain.member.entity.Member;
+import com.example.shop.domain.product.entity.Product;
 import com.example.shop.domain.review.dto.ReviewDto;
 import com.example.shop.domain.review.entity.Review;
 import com.example.shop.domain.review.repository.ReviewRepository;
@@ -19,21 +21,28 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
 
     @Override
+    public ReviewDto createReview(ReviewDto reviewDto) {
+        Review review = new Review();
+        review.setProduct(Product.builder().productId(reviewDto.getProductId()).build());
+        review.setMember(Member.builder().memberId(reviewDto.getMemberId()).build());
+        review.setRating(reviewDto.getRating());
+        review.setContent(reviewDto.getContent());
+        return convertToDto(reviewRepository.save(review));
+    }
+
+    @Override
     public List<ReviewDto> getReviewsByProductId(Long productId) {
-        List<Review> reviews = reviewRepository.findByProductId(productId);
-        return reviews.stream()
+        return reviewRepository.findByProduct_ProductId(productId).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ReviewDto createReview(ReviewDto reviewDto) {
-        Review review = new Review();
-        review.setProductId(reviewDto.getProductId());
-        review.setMemberId(reviewDto.getMemberId());
+    public ReviewDto updateReview(Long reviewId, ReviewDto reviewDto) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.REVIEW_NOT_FOUND));
         review.setRating(reviewDto.getRating());
         review.setContent(reviewDto.getContent());
-        review = reviewRepository.save(review);
         return convertToDto(review);
     }
 
@@ -46,13 +55,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private ReviewDto convertToDto(Review review) {
-        return new ReviewDto(
-                review.getReviewId(),
-                review.getProductId(),
-                review.getMemberId(),
-                review.getRating(),
-                review.getContent(),
-                review.getCreatedAt()
-        );
+        return ReviewDto.builder()
+                .reviewId(review.getReviewId())
+                .productId(review.getProduct() != null ? review.getProduct().getProductId() : null)
+                .memberId(review.getMember() != null ? review.getMember().getMemberId() : null)
+                .rating(review.getRating())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt() != null ? review.getCreatedAt().toString() : null)
+                .build();
     }
 }

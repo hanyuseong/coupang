@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.payment.dto;
+package com.example.shop.domain.payment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

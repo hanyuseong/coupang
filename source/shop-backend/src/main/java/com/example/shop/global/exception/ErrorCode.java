@@ -1,14 +1,18 @@
-﻿package com.example.shop.global.exception;
+package com.example.shop.global.exception;
 
 public enum ErrorCode {
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "Member not found."),
     INVALID_PASSWORD("INVALID_PASSWORD", "Invalid password."),
     EMAIL_ALREADY_EXISTS("EMAIL_ALREADY_EXISTS", "Email already exists."),
     ADDRESS_NOT_FOUND("ADDRESS_NOT_FOUND", "Address not found."),
+    CATEGORY_NOT_FOUND("CATEGORY_NOT_FOUND", "Category not found."),
     PRODUCT_NOT_FOUND("PRODUCT_NOT_FOUND", "Product not found."),
     ORDER_NOT_FOUND("ORDER_NOT_FOUND", "Order not found."),
+    CART_NOT_FOUND("CART_NOT_FOUND", "Cart not found."),
     CART_ITEM_NOT_FOUND("CART_ITEM_NOT_FOUND", "Cart item not found."),
+    PAYMENT_NOT_FOUND("PAYMENT_NOT_FOUND", "Payment not found."),
     PAYMENT_FAILED("PAYMENT_FAILED", "Payment failed."),
+    REVIEW_NOT_FOUND("REVIEW_NOT_FOUND", "Review not found."),
     COUPON_NOT_FOUND("COUPON_NOT_FOUND", "Coupon not found."),
     POINTS_NOT_ENOUGH("POINTS_NOT_ENOUGH", "Not enough points."),
     UNAUTHORIZED("UNAUTHORIZED", "Unauthorized access."),

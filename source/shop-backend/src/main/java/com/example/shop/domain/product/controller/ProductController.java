@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.product.controller;
+package com.example.shop.domain.product.controller;
 
 import com.example.shop.global.common.ApiResponse;
 import com.example.shop.domain.product.dto.ProductDto;

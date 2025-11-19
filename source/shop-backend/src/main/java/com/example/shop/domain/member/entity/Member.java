@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.member.entity;
+package com.example.shop.domain.member.entity;
 
 import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.member.enums.MemberStatus;
@@ -8,6 +8,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -1,5 +1,8 @@
-﻿package com.example.shop.domain.payment.entity;
+package com.example.shop.domain.payment.entity;
 
+import com.example.shop.domain.order.entity.Order;
+import com.example.shop.domain.payment.enums.PaymentMethod;
+import com.example.shop.domain.payment.enums.PaymentStatus;
 import com.example.shop.global.common.BaseEntity;
 
 import jakarta.persistence.*;
@@ -7,11 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

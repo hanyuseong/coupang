@@ -1,10 +1,12 @@
-﻿package com.example.shop.domain.member.service.impl;
+package com.example.shop.domain.member.service.impl;
 
 import com.example.shop.domain.member.dto.AuthResponse;
 import com.example.shop.domain.member.dto.LoginRequest;
 import com.example.shop.domain.member.dto.SignUpRequest;
 import com.example.shop.domain.member.entity.Member;
+import com.example.shop.domain.member.enums.MemberStatus;
 import com.example.shop.domain.member.repository.MemberRepository;
+import com.example.shop.domain.member.service.AuthService;
 import com.example.shop.global.exception.BusinessException;
 import com.example.shop.global.exception.ErrorCode;
 import com.example.shop.config.JwtTokenProvider;
@@ -46,5 +48,14 @@ public class AuthServiceImpl implements AuthService {
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
 
         return new AuthResponse(accessToken, refreshToken);
+    }
+
+    @Override
+    public String refreshToken(String refreshToken) {
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        }
+        String email = jwtTokenProvider.getEmailFromToken(refreshToken);
+        return jwtTokenProvider.generateAccessToken(email);
     }
 }

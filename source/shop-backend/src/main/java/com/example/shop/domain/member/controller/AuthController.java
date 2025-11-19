@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.member.controller;
+package com.example.shop.domain.member.controller;
 
 import com.example.shop.global.common.ApiResponse;
 import com.example.shop.domain.member.dto.AuthResponse;

@@ -1,5 +1,6 @@
-﻿package com.example.shop.domain.cart.entity;
+package com.example.shop.domain.cart.entity;
 
+import com.example.shop.domain.member.entity.Member;
 import com.example.shop.global.common.BaseEntity;
 
 import jakarta.persistence.*;

@@ -1,11 +1,10 @@
-﻿import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+package com.example.shop;
 
-@SpringBootTest
+import org.junit.jupiter.api.Test;
+
 class ShopApplicationTests {
 
     @Test
     void contextLoads() {
     }
-
 }

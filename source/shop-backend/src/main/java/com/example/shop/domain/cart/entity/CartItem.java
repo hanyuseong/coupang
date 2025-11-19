@@ -1,11 +1,29 @@
-﻿package com.example.shop.domain.cart.entity;
+package com.example.shop.domain.cart.entity;
 
-import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.product.entity.Product;
-import jakarta.persistence.*;
+import com.example.shop.domain.product.entity.ProductOptionStock;
+import com.example.shop.global.common.BaseEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cart_item")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CartItem extends BaseEntity {
 
     @Id
@@ -27,54 +45,4 @@ public class CartItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_stock_id")
     private ProductOptionStock optionStock;
-
-    // Getters and Setters
-
-    public Long getCartItemId() {
-        return cartItemId;
-    }
-
-    public void setCartItemId(Long cartItemId) {
-        this.cartItemId = cartItemId;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public ProductOptionStock getOptionStock() {
-        return optionStock;
-    }
-
-    public void setOptionStock(ProductOptionStock optionStock) {
-        this.optionStock = optionStock;
-    }
 }

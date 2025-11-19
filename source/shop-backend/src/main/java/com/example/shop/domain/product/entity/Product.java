@@ -1,12 +1,20 @@
-﻿package com.example.shop.domain.product.entity;
+package com.example.shop.domain.product.entity;
 
+import com.example.shop.domain.category.entity.Category;
+import com.example.shop.domain.product.enums.ProductStatus;
 import com.example.shop.global.common.BaseEntity;
 
 import jakarta.persistence.*;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.member.entity;
+package com.example.shop.domain.member.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter

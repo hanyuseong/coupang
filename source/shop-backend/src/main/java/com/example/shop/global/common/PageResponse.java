@@ -1,4 +1,4 @@
-﻿package com.example.shop.global.common;
+package com.example.shop.global.common;
 
 import java.util.List;
 

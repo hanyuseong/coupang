@@ -1,14 +1,18 @@
-﻿package com.example.shop.global.exception;
+package com.example.shop.global.exception;
 
 public class BusinessException extends RuntimeException {
-    private final String errorCode;
+    private final ErrorCode errorCode;
 
-    public BusinessException(String errorCode) {
-        super(errorCode);
+    public BusinessException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
 
-    public String getErrorCode() {
+    public ErrorCode getErrorCode() {
         return errorCode;
+    }
+
+    public String getCode() {
+        return errorCode.getCode();
     }
 }

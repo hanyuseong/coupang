@@ -1,5 +1,6 @@
-﻿package com.example.shop.domain.order.service.impl;
+package com.example.shop.domain.order.service.impl;
 
+import com.example.shop.domain.member.entity.Member;
 import com.example.shop.domain.order.dto.OrderDto;
 import com.example.shop.domain.order.entity.Order;
 import com.example.shop.domain.order.repository.OrderRepository;
@@ -10,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +23,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto placeOrder(OrderDto orderDto) {
-        Order order = new Order();
-        // Set order properties from orderDto
-        // Example: order.setMember(member);
-        // order.setTotalAmount(orderDto.getTotalAmount());
-        // Add additional properties as needed
+        Order order = Order.builder()
+                .member(orderDto.getMemberId() != null ? Member.builder().memberId(orderDto.getMemberId()).build() : null)
+                .totalAmount(orderDto.getTotalAmount())
+                .deliveryFee(orderDto.getDeliveryFee())
+                .build();
 
         Order savedOrder = orderRepository.save(order);
         return convertToDto(savedOrder);
@@ -38,11 +40,21 @@ public class OrderServiceImpl implements OrderService {
         return convertToDto(order);
     }
 
+    @Override
+    public List<OrderDto> getOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private OrderDto convertToDto(Order order) {
-        OrderDto dto = new OrderDto();
-        // Map order properties to dto
-        // Example: dto.setOrderId(order.getOrderId());
-        // Add additional properties as needed
-        return dto;
+        return OrderDto.builder()
+                .orderId(order.getOrderId())
+                .memberId(order.getMember() != null ? order.getMember().getMemberId() : null)
+                .totalAmount(order.getTotalAmount())
+                .deliveryFee(order.getDeliveryFee())
+                .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
+                .build();
     }
 }

@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.order.entity;
+package com.example.shop.domain.order.entity;
 
 import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.product.entity.Product;

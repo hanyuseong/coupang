@@ -1,5 +1,6 @@
-﻿package com.example.shop.domain.order.entity;
+package com.example.shop.domain.order.entity;
 
+import com.example.shop.domain.order.enums.DeliveryStatus;
 import com.example.shop.global.common.BaseEntity;
 
 import jakarta.persistence.*;

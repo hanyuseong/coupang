@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.review.entity;
+package com.example.shop.domain.review.entity;
 
 import com.example.shop.global.common.BaseEntity;
 import com.example.shop.domain.member.entity.Member;

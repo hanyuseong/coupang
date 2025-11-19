@@ -1,4 +1,4 @@
-﻿package com.example.shop.domain.review.dto;
+package com.example.shop.domain.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

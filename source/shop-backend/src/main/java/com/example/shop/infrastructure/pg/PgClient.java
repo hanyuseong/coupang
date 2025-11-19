@@ -1,5 +1,7 @@
-﻿package com.example.shop.infrastructure.pg;
+package com.example.shop.infrastructure.pg;
 
+import com.example.shop.domain.payment.dto.PaymentRequest;
+import com.example.shop.domain.payment.dto.PaymentResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
