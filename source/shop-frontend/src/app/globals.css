@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background-color: #f7f7f7;
+}
+
+body {
+  @apply bg-coupang-gray text-slate-900 antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d0d7e6;
+  border-radius: 999px;
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-md shadow-lg;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

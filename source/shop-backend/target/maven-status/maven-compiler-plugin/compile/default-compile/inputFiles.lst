@@ -28,7 +28,6 @@ D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\domain
 D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\domain\product\entity\Product.java
 D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\ShopApplication.java
 D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\config\SwaggerConfig.java
-D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\global\util\PasswordEncoderConfig.java
 D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\domain\member\service\AuthService.java
 D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\domain\cart\entity\CartItem.java
 D:\privproject\coupang\source\shop-backend\src\main\java\com\example\shop\domain\cart\dto\CartUpdateRequest.java

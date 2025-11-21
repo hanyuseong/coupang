@@ -2,7 +2,6 @@ package com.example.shop.domain.cart.dto;
 
 import com.example.shop.domain.cart.entity.Cart;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CartDto {
     private List<CartItemDto> cartItems;

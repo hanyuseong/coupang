@@ -4,15 +4,12 @@ import com.example.shop.domain.cart.dto.CartDto;
 import com.example.shop.domain.cart.dto.CartAddRequest;
 import com.example.shop.domain.cart.dto.CartUpdateRequest;
 import com.example.shop.domain.cart.entity.Cart;
-import com.example.shop.domain.cart.entity.CartItem;
 import com.example.shop.domain.cart.repository.CartRepository;
 import com.example.shop.domain.cart.service.CartService;
 import com.example.shop.global.exception.BusinessException;
 import com.example.shop.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional

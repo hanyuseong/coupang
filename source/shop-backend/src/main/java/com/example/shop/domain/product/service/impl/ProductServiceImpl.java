@@ -7,6 +7,7 @@ import com.example.shop.domain.product.service.ProductService;
 import com.example.shop.global.exception.BusinessException;
 import com.example.shop.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -67,7 +69,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDto> getProductList(Long categoryId, String sort, Integer minPrice, Integer maxPrice, Pageable pageable) {
+    public Page<ProductDto> getProductList(Long categoryId, String sort, Integer minPrice, Integer maxPrice,
+            Pageable pageable) {
+        log.info(
+                "ProductService.getProductList called with: categoryId={}, sort={}, minPrice={}, maxPrice={}, pageable={}",
+                categoryId, sort, minPrice, maxPrice, pageable);
         // Filtering/Sorting 로직은 추후 구현
         return productRepository.findAll(pageable).map(this::toDto);
     }
@@ -88,4 +94,3 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 }
-

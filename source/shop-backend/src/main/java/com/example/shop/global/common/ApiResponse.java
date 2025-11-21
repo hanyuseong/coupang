@@ -12,4 +12,8 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> ok(T data) {
         return new ApiResponse<>(true, data);
     }
+
+    public static <T> ApiResponse<T> error(T data) {
+        return new ApiResponse<>(false, data);
+    }
 }

@@ -4,7 +4,6 @@ import com.example.shop.global.common.ApiResponse;
 import com.example.shop.domain.category.dto.CategoryDto;
 import com.example.shop.domain.category.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

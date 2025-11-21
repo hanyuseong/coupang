@@ -38,7 +38,6 @@ com\example\shop\domain\member\entity\MemberAddress.class
 com\example\shop\domain\admin\dto\AdminDto.class
 com\example\shop\domain\member\service\impl\MemberServiceImpl.class
 com\example\shop\global\common\PageResponse.class
-PasswordEncoderConfig.class
 com\example\shop\global\exception\BusinessException.class
 com\example\shop\domain\order\entity\Order$OrderBuilder.class
 com\example\shop\domain\payment\service\impl\PaymentServiceImpl.class
@@ -85,7 +84,6 @@ com\example\shop\domain\member\repository\MemberAddressRepository.class
 com\example\shop\config\JwtAuthenticationFilter.class
 com\example\shop\domain\product\dto\ProductDto.class
 com\example\shop\infrastructure\email\EmailService.class
-CorsConfig.class
 com\example\shop\domain\member\entity\Member.class
 com\example\shop\domain\order\dto\OrderItemDto.class
 com\example\shop\domain\product\entity\Product.class
