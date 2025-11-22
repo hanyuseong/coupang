@@ -1,5 +1,6 @@
 com\example\shop\domain\order\dto\OrderCreateRequest$OrderCreateRequestBuilder.class
 com\example\shop\domain\product\entity\ProductOptionGroup.class
+com\example\shop\config\CorsConfig.class
 com\example\shop\domain\category\dto\CategoryDto$CategoryDtoBuilder.class
 com\example\shop\domain\member\entity\MemberAddress$MemberAddressBuilder.class
 com\example\shop\domain\product\repository\ProductRepository.class

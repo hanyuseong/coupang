@@ -1,4 +1,5 @@
 import { SearchBar } from "./search-bar";
+import Link from "next/link";
 
 type SiteHeaderProps = {
   suggestionKeywords: string[];
@@ -28,12 +29,12 @@ export function SiteHeader({
           </div>
 
           <div className="hidden items-center gap-6 text-sm font-medium lg:flex">
-            <button className="flex flex-col items-center gap-1 text-white/80">
+            <Link href="/login" className="flex flex-col items-center gap-1 text-white/80">
               <span className="rounded-lg bg-white/15 px-2 py-1 text-[10px]">
                 내 주문
               </span>
               <span>마이쿠팡</span>
-            </button>
+            </Link>
             <button className="flex flex-col items-center gap-1 text-white/80">
               <span className="rounded-lg bg-white/15 px-2 py-1 text-[10px]">
                 혜택

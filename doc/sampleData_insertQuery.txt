@@ -1,0 +1,134 @@
+🚀 1. CATEGORY — 20개 INSERT
+
+(Self FK)
+
+-- depth 1
+INSERT INTO category (category_id, parent_id, name, depth, sort_order) VALUES
+(1, NULL, '패션의류', 1, 1),
+(2, NULL, '디지털기기', 1, 2),
+(3, NULL, '생활용품', 1, 3),
+(4, NULL, '뷰티', 1, 4),
+(5, NULL, '스포츠', 1, 5);
+
+-- depth 2
+INSERT INTO category (category_id, parent_id, name, depth, sort_order) VALUES
+(6, 1, '남성의류', 2, 1),
+(7, 1, '여성의류', 2, 2),
+(8, 2, '모바일', 2, 1),
+(9, 2, '컴퓨터', 2, 2),
+(10, 3, '주방용품', 2, 1),
+(11, 3, '욕실용품', 2, 2),
+(12, 4, '스킨케어', 2, 1),
+(13, 4, '메이크업', 2, 2),
+(14, 5, '트레이닝', 2, 1),
+(15, 5, '캠핑', 2, 2);
+
+-- depth 3
+INSERT INTO category (category_id, parent_id, name, depth, sort_order) VALUES
+(16, 6, '상의', 3, 1),
+(17, 6, '하의', 3, 2),
+(18, 7, '원피스', 3, 1),
+(19, 7, '아우터', 3, 2),
+(20, 8, '스마트폰', 3, 1);
+
+🚀 2. PRODUCT — 20개 INSERT
+
+(카테고리 FK = category_id 6~20 중 랜덤 적용)
+
+INSERT INTO product (product_id, category_id, name, description, brand, price, discount_price, stock, status, created_at, updated_at)
+VALUES
+(1, 16, '남성 코튼 반팔', '데일리 반팔티', 'STANDARD', 19000, 15000, 0, 'ACTIVE', NOW(), NOW()),
+(2, 17, '남성 조거팬츠', '편한 조거핏 팬츠', 'MOVEFIT', 29000, 25000, 0, 'ACTIVE', NOW(), NOW()),
+(3, 18, '여성 플레어 원피스', '여름 플레어 원피스', 'LOVELY', 39000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(4, 19, '여성 숏패딩', '경량 숏패딩', 'WINTERLY', 79000, 69000, 0, 'ACTIVE', NOW(), NOW()),
+(5, 20, '스마트폰 케이스', '충격흡수 케이스', 'CASELAB', 12000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(6, 10, '후라이팬 28cm', '넌스틱 코팅 프라이팬', 'COOKER', 25000, 18000, 0, 'ACTIVE', NOW(), NOW()),
+(7, 11, '세면타월 3P', '부드러운 면타올 세트', 'HOMEWARM', 15000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(8, 12, '수분크림', '저자극 보습 크림', 'SKINLAB', 22000, 18000, 0, 'ACTIVE', NOW(), NOW()),
+(9, 13, '립스틱 매트', '고발색 매트 립스틱', 'BEAUTYPRO', 17000, 14000, 0, 'ACTIVE', NOW(), NOW()),
+(10, 14, '러닝 반팔', '흡습속건 기능성 티셔츠', 'SPORTY', 24000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(11, 14, '트레이닝 팬츠', '기능성 팬츠', 'SPORTY', 34000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(12, 15, '캠핑용 의자', '접이식 캠핑 의자', 'OUTDOOR', 39000, 35000, 0, 'ACTIVE', NOW(), NOW()),
+(13, 15, '캠핑용 랜턴', 'LED 충전 랜턴', 'OUTDOOR', 29000, 25000, 0, 'ACTIVE', NOW(), NOW()),
+(14, 8, '블루투스 이어폰', '노이즈캔슬링 이어폰', 'SOUNDBOX', 89000, 79000, 0, 'ACTIVE', NOW(), NOW()),
+(15, 9, '노트북 가방', '14인치 파우치', 'DIGIBAG', 23000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(16, 9, '게이밍 마우스', 'RGB 게이밍 마우스', 'GAMERZ', 45000, 39000, 0, 'ACTIVE', NOW(), NOW()),
+(17, 18, '여성 블라우스', '오피스룩 블라우스', 'LOVELY', 28000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(18, 17, '남성 슬랙스', '슬림핏 슬랙스', 'STANDARD', 39000, 30000, 0, 'ACTIVE', NOW(), NOW()),
+(19, 20, '스마트폰 보호필름', '강화유리 필름', 'PROGLASS', 9000, NULL, 0, 'ACTIVE', NOW(), NOW()),
+(20, 11, '욕실 매트', '논슬립 욕실 매트', 'HOMEWARM', 17000, NULL, 0, 'ACTIVE', NOW(), NOW());
+
+🚀 3. PRODUCT_OPTION_GROUP — 20개 INSERT
+
+각 product당 1~2개 옵션 그룹
+
+INSERT INTO product_option_group (option_group_id, product_id, name) VALUES
+(1, 1, '색상'), (2, 1, '사이즈'),
+(3, 2, '색상'), (4, 2, '사이즈'),
+(5, 3, '색상'), (6, 3, '사이즈'),
+(7, 4, '색상'), (8, 4, '사이즈'),
+(9, 5, '색상'),
+
+(10, 6, '색상'),
+(11, 7, '컬러'),
+(12, 8, '용량'),
+(13, 9, '색상'),
+(14, 10, '사이즈'),
+(15, 11, '사이즈'),
+(16, 12, '색상'),
+(17, 13, '색상'),
+(18, 14, '색상'),
+(19, 15, '컬러'),
+(20, 16, '컬러');
+
+🚀 4. PRODUCT_OPTION — 20개 INSERT
+
+각 그룹에 1~3개 옵션값
+
+INSERT INTO product_option (option_id, option_group_id, value) VALUES
+(1,1,'화이트'), (2,1,'블랙'),
+(3,2,'M'), (4,2,'L'),
+(5,3,'블랙'), (6,3,'그레이'),
+(7,4,'M'), (8,4,'L'),
+(9,5,'베이지'), (10,5,'블랙'),
+(11,6,'FREE'),
+(12,7,'화이트'), (13,7,'블루'),
+(14,8,'S'), (15,8,'M'),
+(16,9,'블랙'),
+(17,10,'블랙'), (18,10,'그린'),
+(19,11,'화이트'), (20,11,'핑크');
+
+🚀 5. PRODUCT_OPTION_STOCK — 20개 INSERT
+
+옵션 조합별 재고/가격
+
+INSERT INTO product_option_stock (option_stock_id, product_id, option1_id, option2_id, option3_id, stock, price) VALUES
+(1, 1, 1, 3, NULL, 30, 15000),
+(2, 1, 1, 4, NULL, 25, 15000),
+(3, 1, 2, 3, NULL, 20, 15000),
+(4, 1, 2, 4, NULL, 15, 15000),
+
+(5, 2, 5, 7, NULL, 30, 25000),
+(6, 2, 5, 8, NULL, 28, 25000),
+(7, 2, 6, 7, NULL, 22, 25000),
+(8, 2, 6, 8, NULL, 18, 25000),
+
+(9, 3, 9, 11, NULL, 12, 39000),
+(10, 3, 10, 11, NULL, 10, 39000),
+
+(11, 4, 12, 14, NULL, 15, 69000),
+(12, 4, 13, 14, NULL, 13, 69000),
+
+(13, 5, 16, NULL, NULL, 50, 12000),
+
+(14, 6, 17, NULL, NULL, 23, 18000),
+(15, 6, 18, NULL, NULL, 20, 18000),
+
+(16, 7, 19, NULL, NULL, 30, 15000),
+(17, 7, 20, NULL, NULL, 28, 15000),
+
+(18, 8, 11, NULL, NULL, 40, 18000),
+
+(19, 9, 13, NULL, NULL, 22, 14000),
+
+(20, 10, 14, NULL, NULL, 35, 24000);

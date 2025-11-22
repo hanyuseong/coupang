@@ -125,3 +125,30 @@ export async function fetchReviews(
     ? payload.data
     : fallbackReviews;
 }
+export type AuthResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export async function login(email: string, password: string): Promise<AuthResponse | null> {
+  const payload = await safeRequest<ApiResponse<AuthResponse>>("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  return payload?.data ?? null;
+}
+
+export type SignupRequest = {
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+};
+
+export async function signup(request: SignupRequest): Promise<boolean> {
+  const payload = await safeRequest<ApiResponse<string>>("/api/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(request),
+  });
+  return payload?.success ?? false;
+}

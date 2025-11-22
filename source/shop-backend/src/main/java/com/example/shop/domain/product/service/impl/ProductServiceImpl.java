@@ -70,10 +70,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDto> getProductList(Long categoryId, String sort, Integer minPrice, Integer maxPrice,
+            String keyword,
             Pageable pageable) {
         log.info(
-                "ProductService.getProductList called with: categoryId={}, sort={}, minPrice={}, maxPrice={}, pageable={}",
-                categoryId, sort, minPrice, maxPrice, pageable);
+                "ProductService.getProductList called with: categoryId={}, sort={}, minPrice={}, maxPrice={}, keyword={}, pageable={}",
+                categoryId, sort, minPrice, maxPrice, keyword, pageable);
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            return productRepository.findByKeyword(keyword, pageable).map(this::toDto);
+        }
+
         // Filtering/Sorting 로직은 추후 구현
         return productRepository.findAll(pageable).map(this::toDto);
     }

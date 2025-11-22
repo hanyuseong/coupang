@@ -1,6 +1,6 @@
 INSERT INTO member (email, password, name, phone, status, created_at, updated_at) VALUES
-('user1@example.com', '$2a$10$EIXZ5g5y5Z8Z5Z5Z5Z5Z5O', '홍길동', '01012345678', 'ACTIVE', NOW(), NOW()),
-('user2@example.com', '$2a$10$EIXZ5g5y5Z8Z5Z5Z5Z5Z5O', '김철수', '01098765432', 'ACTIVE', NOW(), NOW());
+('user1@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '홍길동', '01012345678', 'ACTIVE', NOW(), NOW()),
+('user2@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '김철수', '01098765432', 'ACTIVE', NOW(), NOW());
 
 INSERT INTO member_address (member_id, receiver_name, receiver_phone, zipcode, addr1, addr2, is_default, created_at) VALUES
 (1, '홍길동', '01033334444', '06011', '서울시 강남구', '101동 501호', 1, NOW()),
@@ -38,7 +38,7 @@ INSERT INTO cart_item (cart_item_id, cart_id, product_id, option_stock_id, quant
 (1, 1, 1, 1, 2, 99000),
 (2, 1, 2, 3, 1, 180000);
 
-INSERT INTO order (order_id, member_id, address_id, order_status, payment_status, total_amount, delivery_fee, created_at) VALUES
+INSERT INTO `order` (order_id, member_id, address_id, order_status, payment_status, total_amount, delivery_fee, created_at) VALUES
 (1, 1, 1, 'PAID', 'SUCCESS', 207000, 0, NOW());
 
 INSERT INTO order_item (order_item_id, order_id, product_id, option_stock_id, quantity, price, discount_price) VALUES
