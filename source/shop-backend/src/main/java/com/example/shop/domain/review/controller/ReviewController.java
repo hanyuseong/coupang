@@ -30,7 +30,8 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<ApiResponse<ReviewDto>> updateReview(@PathVariable Long reviewId, @RequestBody ReviewDto reviewDto) {
+    public ResponseEntity<ApiResponse<ReviewDto>> updateReview(@PathVariable Long reviewId,
+            @RequestBody ReviewDto reviewDto) {
         ReviewDto updatedReview = reviewService.updateReview(reviewId, reviewDto);
         return ResponseEntity.ok(ApiResponse.ok(updatedReview));
     }
@@ -39,5 +40,11 @@ public class ReviewController {
     public ResponseEntity<ApiResponse<String>> deleteReview(@PathVariable Long reviewId) {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok(ApiResponse.ok("Review deleted successfully"));
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<ApiResponse<List<ReviewDto>>> getRecentReviews() {
+        List<ReviewDto> reviews = reviewService.getRecentReviews();
+        return ResponseEntity.ok(ApiResponse.ok(reviews));
     }
 }

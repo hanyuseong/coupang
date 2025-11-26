@@ -1,16 +1,16 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "interactive",
-    "terminal.integrated.cwd": "D:\\03.project\\coupang\\coupang\\source",
+    "terminal.integrated.cwd": "D:\\privproject\\coupang\\source",
     "terminal.integrated.profiles.windows": {
         "PowerShell": {
             "source": "PowerShell",
-            "cwd": "D:\\03.project\\coupang\\coupang\\source",
+            "cwd": "D:\\privproject\\coupang\\source",
             "icon": "terminal-powershell"
         },
         "Windows PowerShell": {
             "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-            "cwd": "D:\\03.project\\coupang\\coupang\\source"
+            "cwd": "D:\\privproject\\coupang\\source"
         }
     },
     "terminal.integrated.defaultProfile.windows": "PowerShell"

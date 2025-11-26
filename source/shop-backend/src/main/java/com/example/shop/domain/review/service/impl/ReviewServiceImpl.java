@@ -48,10 +48,17 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(Long reviewId) {
-        if (!reviewRepository.existsById(reviewId)) {
-            throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
-        }
-        reviewRepository.deleteById(reviewId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.REVIEW_NOT_FOUND));
+        reviewRepository.delete(review);
+    }
+
+    @Override
+    public List<ReviewDto> getRecentReviews() {
+        List<Review> reviews = reviewRepository.findTop3ByOrderByCreatedAtDesc();
+        return reviews.stream()
+                .map(ReviewDto::from)
+                .collect(Collectors.toList());
     }
 
     private ReviewDto convertToDto(Review review) {

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     java.util.List<Review> findByProduct_ProductId(Long productId);
+
+    java.util.List<Review> findTop3ByOrderByCreatedAtDesc();
 }

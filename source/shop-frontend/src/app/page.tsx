@@ -13,6 +13,9 @@ import {
   fetchOrders,
   fetchProducts,
   fetchReviews,
+  fetchRecommendedKeywords,
+  fetchLightningDeals,
+  fetchRecentReviews,
 } from "@/lib/api";
 import { splitProducts } from "@/lib/utils";
 
@@ -23,9 +26,12 @@ export default async function HomePage({
 }: {
   searchParams: { keyword?: string };
 }) {
-  const [categories, products] = await Promise.all([
+  const [categories, products, recommendedKeywords, lightningDeals, recentReviews] = await Promise.all([
     fetchCategories(),
     fetchProducts({ keyword: searchParams.keyword }),
+    fetchRecommendedKeywords(),
+    fetchLightningDeals(),
+    fetchRecentReviews(),
   ]);
 
   const productGroups = splitProducts(products);
@@ -42,6 +48,7 @@ export default async function HomePage({
     <div className="min-h-screen bg-coupang-gray">
       <SiteHeader
         suggestionKeywords={products.map((p) => p.name)}
+        recommendedKeywords={recommendedKeywords}
         cartCount={cart.cartItems?.length ?? 0}
       />
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
@@ -56,12 +63,12 @@ export default async function HomePage({
               products={productGroups.featured}
               initialVisibleCount={6}
             />
-            <DealRail products={productGroups.discounted} />
+            <DealRail products={lightningDeals} />
           </div>
           <div className="space-y-6">
             <CartSummary cart={cart} />
             <OrderStatus orders={orders} />
-            <ReviewHighlight reviews={reviews} />
+            <ReviewHighlight reviews={recentReviews} />
           </div>
         </div>
 

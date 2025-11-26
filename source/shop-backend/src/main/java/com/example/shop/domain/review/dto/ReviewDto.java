@@ -16,4 +16,15 @@ public class ReviewDto {
     private int rating;
     private String content;
     private String createdAt;
+
+    public static ReviewDto from(com.example.shop.domain.review.entity.Review review) {
+        return ReviewDto.builder()
+                .reviewId(review.getReviewId())
+                .productId(review.getProduct() != null ? review.getProduct().getProductId() : null)
+                .memberId(review.getMember() != null ? review.getMember().getMemberId() : null)
+                .rating(review.getRating())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt() != null ? review.getCreatedAt().toString() : null)
+                .build();
+    }
 }

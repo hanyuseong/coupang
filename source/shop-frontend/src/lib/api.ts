@@ -98,6 +98,21 @@ export async function fetchCategories(): Promise<Category[]> {
     : fallbackCategories;
 }
 
+export async function fetchRecommendedKeywords(): Promise<string[]> {
+  const payload = await safeRequest<ApiResponse<string[]>>("/api/keywords/recommended");
+  return payload?.data ?? ["로켓배송", "로켓프레시", "쿠팡비즈", "골드박스", "와우할인", "여행/티켓"];
+}
+
+export async function fetchLightningDeals(): Promise<Product[]> {
+  const payload = await safeRequest<ApiResponse<Product[]>>("/api/lightning-deals");
+  return payload?.data ?? [];
+}
+
+export async function fetchRecentReviews(): Promise<Review[]> {
+  const payload = await safeRequest<ApiResponse<Review[]>>("/api/reviews/recent");
+  return payload?.data ?? [];
+}
+
 export async function fetchCart(): Promise<Cart> {
   const payload = await safeRequest<ApiResponse<Cart>>("/api/cart");
   return payload?.data ?? fallbackCart;

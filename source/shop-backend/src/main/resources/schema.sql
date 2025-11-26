@@ -262,3 +262,21 @@ CREATE TABLE admin_user (
     role ENUM('ADMIN', 'MANAGER'),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 25. Lightning Deal Table
+CREATE TABLE lightning_deal (
+    deal_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+-- 24. Recommended Keyword Table
+CREATE TABLE recommended_keyword (
+    keyword_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    keyword VARCHAR(100) NOT NULL,
+    display_order INT,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

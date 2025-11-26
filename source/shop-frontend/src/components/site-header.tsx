@@ -3,11 +3,13 @@ import Link from "next/link";
 
 type SiteHeaderProps = {
   suggestionKeywords: string[];
+  recommendedKeywords?: string[];
   cartCount: number;
 };
 
 export function SiteHeader({
   suggestionKeywords,
+  recommendedKeywords = [],
   cartCount,
 }: SiteHeaderProps) {
   return (
@@ -23,9 +25,9 @@ export function SiteHeader({
                 새벽 7시 전 도착 · 로켓배송 전용관
               </p>
             </div>
-            <div className="text-3xl font-extrabold tracking-tight">
+            <Link href="/" className="text-3xl font-extrabold tracking-tight hover:opacity-90">
               Coupang Style
-            </div>
+            </Link>
           </div>
 
           <div className="hidden items-center gap-6 text-sm font-medium lg:flex">
@@ -56,14 +58,15 @@ export function SiteHeader({
         <SearchBar suggestions={suggestionKeywords} />
 
         <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
-          {["로켓배송", "로켓프레시", "쿠팡비즈", "골드박스", "와우할인", "여행/티켓"].map(
+          {recommendedKeywords.map(
             (keyword) => (
-              <span
+              <Link
                 key={keyword}
-                className="rounded-full border border-white/30 px-3 py-1 text-white/90"
+                href={`/search?keyword=${encodeURIComponent(keyword)}`}
+                className="rounded-full border border-white/30 px-3 py-1 text-white/90 transition hover:bg-white/10"
               >
                 #{keyword}
-              </span>
+              </Link>
             ),
           )}
         </div>

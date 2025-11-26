@@ -15,7 +15,7 @@ export function SearchBar({ suggestions }: SearchBarProps) {
   const handleSearch = () => {
     setIsExpanded(false);
     if (keyword.trim()) {
-      router.push(`/?keyword=${encodeURIComponent(keyword)}`);
+      router.push(`/search?keyword=${encodeURIComponent(keyword)}`);
     }
   };
 
