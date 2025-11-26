@@ -1,4 +1,5 @@
 import { Review } from "@/lib/types";
+import Link from "next/link";
 
 type ReviewHighlightProps = {
   reviews: Review[];
@@ -14,9 +15,9 @@ export function ReviewHighlight({ reviews }: ReviewHighlightProps) {
           <p className="text-xs font-semibold text-coupang-blue">실시간 리뷰</p>
           <h2 className="text-xl font-bold">와우회원 생생후기</h2>
         </div>
-        <button className="text-sm font-semibold text-coupang-blue">
+        <Link href="/reviews" className="text-sm font-semibold text-coupang-blue">
           리뷰 더보기 →
-        </button>
+        </Link>
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -38,6 +39,6 @@ export function ReviewHighlight({ reviews }: ReviewHighlightProps) {
           </article>
         ))}
       </div>
-    </section>
+    </section >
   );
 }

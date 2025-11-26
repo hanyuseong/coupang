@@ -36,7 +36,11 @@ public class SecurityConfig {
                                 "/api/products/**",
                                 "/api/keywords/**",
                                 "/api/lightning-deals/**",
-                                "/api/reviews/**")
+                                "/api/reviews/**",
+                                "/api/reviews-list/**",
+                                "/api/cart",
+                                "/api/cart/**",
+                                "/api/members/me")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

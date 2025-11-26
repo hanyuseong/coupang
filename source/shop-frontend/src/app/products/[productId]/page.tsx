@@ -1,7 +1,9 @@
-import Image from "next/image";
+﻿import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { FooterLinks } from "@/components/footer-links";
+import { AddToCartButton } from "@/components/add-to-cart-button";
 import { fetchCart, fetchProduct, fetchRecommendedKeywords } from "@/lib/api";
 import { calcDiscountPercent, formatCurrency } from "@/lib/utils";
 
@@ -69,7 +71,7 @@ export default async function ProductDetailPage({
                             </h1>
                             <div className="mt-2 flex items-center gap-2">
                                 <div className="flex text-coupang-blue">
-                                    {"★".repeat(Math.floor(product.rating ?? 0))}
+                                    {"⭐".repeat(Math.floor(product.rating ?? 0))}
                                     {"☆".repeat(5 - Math.floor(product.rating ?? 0))}
                                 </div>
                                 <span className="text-sm text-coupang-blue underline">
@@ -101,7 +103,7 @@ export default async function ProductDetailPage({
                                         ROCKET
                                     </span>
                                     <span className="text-sm font-bold text-green-600">
-                                        내일(화) 새벽 7시 전 도착 보장
+                                        익일(내일 새벽 7시) 도착 보장
                                     </span>
                                 </div>
                             )}
@@ -126,9 +128,7 @@ export default async function ProductDetailPage({
 
                         {/* Action Buttons */}
                         <div className="mt-auto flex gap-3 pt-6 lg:sticky lg:bottom-0 lg:bg-white lg:pb-0">
-                            <button className="flex-1 rounded-md border border-coupang-blue bg-white py-4 text-lg font-bold text-coupang-blue transition hover:bg-blue-50">
-                                장바구니 담기
-                            </button>
+                            <AddToCartButton productId={product.productId} />
                             <button className="flex-1 rounded-md bg-coupang-blue py-4 text-lg font-bold text-white shadow-md transition hover:bg-blue-600">
                                 바로구매
                             </button>
@@ -139,7 +139,7 @@ export default async function ProductDetailPage({
                 {/* Product Details Content Placeholder */}
                 <div className="mt-16 border-t border-slate-200 pt-16">
                     <h2 className="mb-8 text-xl font-bold text-slate-800">상품 상세 정보</h2>
-                    <div className="aspect-[3/4] w-full max-w-3xl mx-auto bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">
+                    <div className="mx-auto flex aspect-[3/4] w-full max-w-3xl items-center justify-center rounded-lg bg-slate-100 text-slate-400">
                         상품 상세 이미지가 여기에 표시됩니다.
                     </div>
                 </div>

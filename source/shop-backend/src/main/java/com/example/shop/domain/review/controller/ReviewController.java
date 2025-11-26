@@ -47,4 +47,13 @@ public class ReviewController {
         List<ReviewDto> reviews = reviewService.getRecentReviews();
         return ResponseEntity.ok(ApiResponse.ok(reviews));
     }
+
+    @GetMapping("/list-all")
+    public ResponseEntity<ApiResponse<List<ReviewDto>>> getAllReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        List<ReviewDto> reviews = reviewService.getAllReviews(pageable).getContent();
+        return ResponseEntity.ok(ApiResponse.ok(reviews));
+    }
 }

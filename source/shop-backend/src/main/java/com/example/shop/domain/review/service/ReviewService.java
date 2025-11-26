@@ -14,4 +14,6 @@ public interface ReviewService {
     void deleteReview(Long reviewId);
 
     List<ReviewDto> getRecentReviews();
+
+    org.springframework.data.domain.Page<ReviewDto> getAllReviews(org.springframework.data.domain.Pageable pageable);
 }

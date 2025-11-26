@@ -61,6 +61,13 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public org.springframework.data.domain.Page<ReviewDto> getAllReviews(
+            org.springframework.data.domain.Pageable pageable) {
+        return reviewRepository.findAll(pageable)
+                .map(ReviewDto::from);
+    }
+
     private ReviewDto convertToDto(Review review) {
         return ReviewDto.builder()
                 .reviewId(review.getReviewId())
