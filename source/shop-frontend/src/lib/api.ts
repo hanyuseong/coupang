@@ -12,13 +12,22 @@ const API_BASE_URL =
 
 async function safeRequest<T>(path: string, init?: RequestInit): Promise<T | null> {
   try {
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+      ...(init?.headers || {}),
+    };
+
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+      }
+    }
+
     const response = await fetch(`${API_BASE_URL}${path}`, {
       ...init,
       cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        ...(init?.headers || {}),
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -116,6 +125,69 @@ export async function fetchRecentReviews(): Promise<Review[]> {
 export async function fetchCart(): Promise<Cart> {
   const payload = await safeRequest<ApiResponse<Cart>>("/api/cart");
   return payload?.data ?? fallbackCart;
+}
+
+export async function addCartItem(
+  productId: number,
+  quantity = 1,
+  optionStockId?: number,
+): Promise<boolean> {
+  const body = {
+    productId,
+    quantity,
+    ...(optionStockId ? { optionStockId } : {}),
+  };
+
+  const payload = await safeRequest<ApiResponse<string>>("/api/cart", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+  return Boolean(payload?.success);
+}
+
+export async function removeCartItem(cartItemId: number): Promise<boolean> {
+  const payload = await safeRequest<ApiResponse<string>>(`/api/cart/${cartItemId}`, {
+    method: "DELETE",
+  });
+  return Boolean(payload?.success);
+}
+
+export async function updateCartItemQuantity(
+  cartItemId: number,
+  quantity: number
+): Promise<boolean> {
+  const payload = await safeRequest<ApiResponse<string>>(`/api/cart/${cartItemId}`, {
+    method: "PUT",
+    body: JSON.stringify({ quantity }),
+  });
+  return Boolean(payload?.success);
+}
+
+export async function createOrder(orderData: {
+  items: Array<{
+    productId: number;
+    productName: string;
+    quantity: number;
+    price: number;
+  }>;
+  totalAmount: number;
+  deliveryFee: number;
+}): Promise<{ success: boolean; orderId?: number }> {
+  try {
+    const payload = await safeRequest<ApiResponse<{ orderId: number }>>("/api/orders", {
+      method: "POST",
+      body: JSON.stringify(orderData),
+    });
+
+    if (payload?.success && payload.data) {
+      return { success: true, orderId: payload.data.orderId };
+    }
+    return { success: false };
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    return { success: false };
+  }
 }
 
 export async function fetchOrders(): Promise<Order[]> {

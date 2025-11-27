@@ -1,21 +1,43 @@
-﻿import { SearchBar } from "./search-bar";
+﻿"use client";
+
+import { SearchBar } from "./search-bar";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { fetchCurrentMember } from "@/lib/member-api";
+import { Member } from "@/lib/types";
 
 type SiteHeaderProps = {
   suggestionKeywords: string[];
   recommendedKeywords?: string[];
   cartCount: number;
-  isLoggedIn?: boolean;
-  userName?: string;
+  initialIsLoggedIn?: boolean;
+  initialUserName?: string;
 };
 
 export function SiteHeader({
   suggestionKeywords,
   recommendedKeywords = [],
   cartCount,
-  isLoggedIn = false,
-  userName = "",
+  initialIsLoggedIn = false,
+  initialUserName = "",
 }: SiteHeaderProps) {
+  const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
+  const [userName, setUserName] = useState(initialUserName);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const member = await fetchCurrentMember();
+      if (member) {
+        setIsLoggedIn(true);
+        setUserName(member.name);
+      } else {
+        setIsLoggedIn(false);
+        setUserName("");
+      }
+    };
+    loadUser();
+  }, []);
+
   return (
     <header className="w-full border-b border-white/40 bg-gradient-to-r from-coupang-blue via-coupang-blue to-coupang-navy pb-6 pt-4 text-white shadow-floating">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4">

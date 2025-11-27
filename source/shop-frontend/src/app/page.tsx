@@ -50,8 +50,6 @@ export default async function HomePage({
         suggestionKeywords={products.map((p) => p.name)}
         recommendedKeywords={recommendedKeywords}
         cartCount={cart.cartItems?.length ?? 0}
-        isLoggedIn={true}
-        userName="홍길동"
       />
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
         <PromoBanner product={productGroups.highlighted} />

@@ -2,7 +2,9 @@ com\example\shop\domain\order\dto\OrderCreateRequest$OrderCreateRequestBuilder.c
 com\example\shop\domain\product\entity\ProductOptionGroup.class
 com\example\shop\config\CorsConfig.class
 com\example\shop\domain\category\dto\CategoryDto$CategoryDtoBuilder.class
+com\example\shop\domain\review\controller\ReviewListController.class
 com\example\shop\domain\member\entity\MemberAddress$MemberAddressBuilder.class
+com\example\shop\domain\cart\repository\CartItemRepository.class
 com\example\shop\domain\product\repository\ProductRepository.class
 com\example\shop\domain\admin\service\AdminService.class
 com\example\shop\domain\product\entity\ProductOptionStock$ProductOptionStockBuilder.class
@@ -27,6 +29,8 @@ com\example\shop\domain\review\dto\ReviewDto$ReviewDtoBuilder.class
 com\example\shop\domain\payment\dto\PaymentResponse.class
 com\example\shop\domain\review\service\ReviewService.class
 com\example\shop\domain\review\repository\ReviewRepository.class
+com\example\shop\domain\keyword\RecommendedKeywordController.class
+com\example\shop\domain\keyword\RecommendedKeywordRepository.class
 com\example\shop\domain\order\dto\OrderDto.class
 com\example\shop\domain\payment\controller\PaymentController.class
 com\example\shop\domain\member\dto\AddressDto.class
@@ -44,10 +48,12 @@ com\example\shop\domain\order\entity\Order$OrderBuilder.class
 com\example\shop\domain\payment\service\impl\PaymentServiceImpl.class
 com\example\shop\domain\payment\dto\PaymentDto$PaymentDtoBuilder.class
 com\example\shop\config\SecurityConfig.class
+com\example\shop\domain\deal\LightningDealController.class
 com\example\shop\domain\product\entity\Product$ProductBuilder.class
 com\example\shop\infrastructure\pg\PgClient.class
 com\example\shop\domain\member\dto\SignUpRequest.class
 com\example\shop\domain\review\service\impl\ReviewServiceImpl.class
+com\example\shop\domain\deal\LightningDeal.class
 com\example\shop\domain\member\dto\AuthResponse.class
 com\example\shop\domain\product\entity\ProductImage$ProductImageBuilder.class
 com\example\shop\domain\payment\entity\Payment$PaymentBuilder.class
@@ -96,8 +102,10 @@ com\example\shop\domain\category\service\impl\CategoryServiceImpl.class
 com\example\shop\domain\cart\entity\CartItem.class
 com\example\shop\domain\payment\enums\PaymentStatus.class
 com\example\shop\domain\cart\dto\CartAddRequest$CartAddRequestBuilder.class
+com\example\shop\domain\keyword\RecommendedKeyword.class
 com\example\shop\domain\member\service\AuthService.class
 com\example\shop\domain\member\dto\MemberDto.class
+com\example\shop\domain\product\repository\ProductOptionStockRepository.class
 com\example\shop\domain\product\entity\ProductImage.class
 com\example\shop\domain\cart\repository\CartRepository.class
 com\example\shop\domain\payment\dto\PaymentDto.class
@@ -110,6 +118,7 @@ com\example\shop\domain\order\service\impl\OrderServiceImpl.class
 com\example\shop\config\JwtTokenProvider.class
 com\example\shop\domain\admin\dto\AdminDto$AdminDtoBuilder.class
 com\example\shop\global\exception\GlobalExceptionHandler.class
+com\example\shop\domain\deal\LightningDealRepository.class
 com\example\shop\domain\member\controller\AuthController.class
 com\example\shop\domain\order\dto\OrderCreateRequest.class
 com\example\shop\domain\category\repository\CategoryRepository.class

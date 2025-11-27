@@ -1,0 +1,2 @@
+ALTER TABLE order_info MODIFY COLUMN member_id BIGINT NULL;
+ALTER TABLE order_info MODIFY COLUMN address_id BIGINT NULL;

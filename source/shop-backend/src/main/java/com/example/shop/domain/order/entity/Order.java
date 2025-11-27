@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "`order`")
+@Table(name = "order_info")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,6 +36,7 @@ public class Order extends BaseEntity {
     private Long orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @jakarta.persistence.JoinColumn(name = "member_id", nullable = true)
     private Member member;
 
     @Enumerated(EnumType.STRING)

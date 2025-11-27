@@ -61,6 +61,14 @@ export interface Order {
   updatedAt?: string;
 }
 
+export interface Member {
+  memberId: number;
+  email: string;
+  name: string;
+  phone?: string;
+  status?: string;
+}
+
 export type ApiResponse<T> = {
   success: boolean;
   data: T;

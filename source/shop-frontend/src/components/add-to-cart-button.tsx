@@ -26,9 +26,18 @@ export function AddToCartButton({
     try {
       const ok = await addCartItem(productId, quantity, optionStockId);
       if (ok) {
+        router.refresh();
         router.push("/cart");
       } else {
-        alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.");
+        // Check if user is logged in
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          if (confirm("로그인이 필요한 서비스입니다. 로그인 하시겠습니까?")) {
+            router.push("/login");
+          }
+        } else {
+          alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.");
+        }
       }
     } catch (error) {
       console.error("Add to cart failed", error);

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EntityScan(basePackages = "com.example.shop")
 @EnableJpaRepositories(basePackages = "com.example.shop")
+@org.springframework.data.jpa.repository.config.EnableJpaAuditing
 public class ShopApplication {
 
     public static void main(String[] args) {

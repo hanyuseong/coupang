@@ -133,18 +133,27 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateCartItem(Long cartItemId, CartUpdateRequest request) {
-        // TODO: Find cart item and update quantity
-        // CartItem cartItem = cartItemRepository.findById(cartItemId)
-        // .orElseThrow(() -> new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND));
-        // cartItem.setQuantity(request.getQuantity());
-        // cartItemRepository.save(cartItem);
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND));
+
+        if (request.getQuantity() != null && request.getQuantity() > 0) {
+            cartItem.setQuantity(request.getQuantity());
+            cartItemRepository.save(cartItem);
+        } else {
+            throw new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND);
+        }
     }
 
     @Override
     public void removeCartItem(Long cartItemId) {
-        // TODO: Find cart item and remove
-        // CartItem cartItem = cartItemRepository.findById(cartItemId)
-        // .orElseThrow(() -> new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND));
-        // cartItemRepository.delete(cartItem);
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CART_ITEM_NOT_FOUND));
+
+        Cart cart = cartItem.getCart();
+        if (cart != null) {
+            cart.removeCartItem(cartItem);
+        }
+
+        cartItemRepository.delete(cartItem);
     }
 }

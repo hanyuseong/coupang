@@ -1,23 +1,86 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FooterLinks } from "@/components/footer-links";
 import { SiteHeader } from "@/components/site-header";
-import { fetchCart, fetchRecommendedKeywords } from "@/lib/api";
+import { fetchCart, fetchRecommendedKeywords, removeCartItem, updateCartItemQuantity } from "@/lib/api";
 import { formatCurrency } from "@/lib/utils";
+import { CartItem } from "@/components/cart-item";
+import { Cart } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+export default function CartPage() {
+    const [cart, setCart] = useState<Cart | null>(null);
+    const [recommendedKeywords, setRecommendedKeywords] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
 
-export default async function CartPage() {
-    const [cart, recommendedKeywords] = await Promise.all([
-        fetchCart(),
-        fetchRecommendedKeywords(),
-    ]);
+    useEffect(() => {
+        async function loadData() {
+            try {
+                const [cartData, keywordsData] = await Promise.all([
+                    fetchCart(),
+                    fetchRecommendedKeywords(),
+                ]);
+                setCart(cartData);
+                setRecommendedKeywords(keywordsData);
+            } catch (error) {
+                console.error("Failed to load cart data", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, []);
 
-    const items = cart.cartItems ?? [];
+    const handleRemoveItem = async (cartItemId: number) => {
+        try {
+            const success = await removeCartItem(cartItemId);
+            if (success) {
+                const updatedCart = await fetchCart();
+                setCart(updatedCart);
+            } else {
+                console.error('Delete failed: success is false');
+                alert("삭제에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error('Error in handleRemoveItem:', error);
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+
+    const handleUpdateQuantity = async (cartItemId: number, quantity: number) => {
+        try {
+            const success = await updateCartItemQuantity(cartItemId, quantity);
+            if (success) {
+                const updatedCart = await fetchCart();
+                setCart(updatedCart);
+            } else {
+                console.error('Update quantity failed: success is false');
+                alert("수량 변경에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error('Error in handleUpdateQuantity:', error);
+            alert("수량 변경 중 오류가 발생했습니다.");
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-coupang-gray">
+                <div className="text-center">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-coupang-blue border-t-transparent mx-auto"></div>
+                    <p className="mt-4 text-slate-500">장바구니를 불러오는 중...</p>
+                </div>
+            </div>
+        );
+    }
+
+    const items = cart?.cartItems ?? [];
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal =
-        cart.totalAmount ??
+        cart?.totalAmount ??
         items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const deliveryFee = cart.deliveryFee ?? 0;
+    const deliveryFee = cart?.deliveryFee ?? 0;
     const total = subtotal + deliveryFee;
 
     return (
@@ -66,35 +129,12 @@ export default async function CartPage() {
                             </div>
                         ) : (
                             items.map((item) => (
-                                <div
+                                <CartItem
                                     key={item.cartItemId}
-                                    className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm"
-                                >
-                                    <div className="flex items-start justify-between gap-4">
-                                        <div className="space-y-1">
-                                            <p className="text-xs font-semibold text-coupang-blue">
-                                                상품번호 {item.productId}
-                                            </p>
-                                            <p className="text-lg font-bold text-slate-800">
-                                                {item.productName}
-                                            </p>
-                                            <p className="text-sm text-slate-500">
-                                                수량 {item.quantity}개 · 단가 {formatCurrency(item.price)}
-                                            </p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-xl font-extrabold text-coupang-blue">
-                                                {formatCurrency(item.price * item.quantity)}
-                                            </p>
-                                            <Link
-                                                href={`/products/${item.productId}`}
-                                                className="text-xs font-semibold text-coupang-blue underline hover:text-coupang-navy"
-                                            >
-                                                상품 자세히 보기
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </div>
+                                    item={item}
+                                    onRemove={handleRemoveItem}
+                                    onUpdateQuantity={handleUpdateQuantity}
+                                />
                             ))
                         )}
                     </section>
@@ -118,10 +158,13 @@ export default async function CartPage() {
                             </div>
                         </div>
 
-                        <button className="mt-6 w-full rounded-lg bg-coupang-blue py-3 text-lg font-bold text-white shadow-md transition hover:bg-coupang-navy">
+                        <Link
+                            href="/checkout"
+                            className="mt-6 w-full block rounded-lg bg-coupang-blue py-3 text-lg font-bold text-white text-center shadow-md transition hover:bg-coupang-navy"
+                        >
                             결제하기
-                        </button>
-                        <p className="mt-2 text-xs text-slate-500">
+                        </Link>
+                        <p className="mt-2 text-xs text-slate-500 text-center">
                             쿠폰/할인은 결제 단계에서 적용돼요.
                         </p>
                     </aside>

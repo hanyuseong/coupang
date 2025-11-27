@@ -11,6 +11,9 @@ public class CartDto {
     private int deliveryFee;
 
     public CartDto() {
+        this.cartItems = Collections.emptyList();
+        this.totalAmount = 0;
+        this.deliveryFee = 0;
     }
 
     public CartDto(List<CartItemDto> cartItems, int totalAmount, int deliveryFee) {

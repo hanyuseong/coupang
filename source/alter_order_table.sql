@@ -1,0 +1,1 @@
+ALTER TABLE `order` MODIFY COLUMN member_id BIGINT NULL;
