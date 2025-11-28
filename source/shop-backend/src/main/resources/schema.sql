@@ -51,6 +51,7 @@ CREATE TABLE member_address (
     addr2 VARCHAR(255),
     is_default TINYINT(1),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
 
@@ -138,6 +139,7 @@ CREATE TABLE review (
     rating TINYINT,
     content TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
@@ -169,6 +171,7 @@ CREATE TABLE cart (
     cart_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
 
@@ -180,6 +183,8 @@ CREATE TABLE cart_item (
     option_stock_id BIGINT NULL,
     quantity INT,
     price INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (option_stock_id) REFERENCES product_option_stock(option_stock_id)
@@ -195,6 +200,7 @@ CREATE TABLE order_info (
     total_amount INT,
     delivery_fee INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     paid_at DATETIME NULL,
     FOREIGN KEY (member_id) REFERENCES member(member_id),
     FOREIGN KEY (address_id) REFERENCES member_address(address_id)
@@ -209,6 +215,8 @@ CREATE TABLE order_item (
     quantity INT,
     price INT,
     discount_price INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES order_info(order_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (option_stock_id) REFERENCES product_option_stock(option_stock_id)
@@ -221,7 +229,8 @@ CREATE TABLE order_delivery (
     delivery_status ENUM('READY', 'SHIPPING', 'DELIVERED'),
     tracking_number VARCHAR(50),
     courier VARCHAR(50),
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES order_info(order_id)
 );
 
@@ -236,6 +245,8 @@ CREATE TABLE payment (
     pg_tid VARCHAR(100),
     requested_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     approved_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES order_info(order_id)
 );
 
