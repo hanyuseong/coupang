@@ -230,6 +230,13 @@ export async function fetchReviews(
     ? payload.data
     : fallbackReviews;
 }
+
+export async function fetchAllReviews(): Promise<Review[]> {
+  const payload = await safeRequest<ApiResponse<Review[]>>("/api/reviews/all");
+  return payload?.data && Array.isArray(payload.data)
+    ? payload.data
+    : fallbackReviews;
+}
 export type AuthResponse = {
   accessToken: string;
   refreshToken: string;

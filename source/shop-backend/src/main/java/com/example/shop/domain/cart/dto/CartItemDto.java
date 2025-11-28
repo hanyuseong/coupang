@@ -16,5 +16,5 @@ public class CartItemDto {
     private Long optionStockId;
     private Integer quantity;
     private Integer price;
+    private String createdAt;
 }
-

@@ -66,19 +66,13 @@ export function ProductCard({ product, highlight }: ProductCardProps) {
     >
       <Link href={`/products/${product.productId}`} className="contents">
         <div className="relative aspect-square w-1/2 mx-auto overflow-hidden rounded-2xl bg-coupang-gray">
-          {product.thumbnail ? (
-            <Image
-              src={product.thumbnail}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width:768px) 100vw, 50vw"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-slate-400">
-              이미지 준비중
-            </div>
-          )}
+          <Image
+            src={product.thumbnail || `/images/${product.productId}.png`}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes="(max-width:768px) 100vw, 50vw"
+          />
           {discount && (
             <span className="absolute left-3 top-3 rounded-full bg-coupang-red px-3 py-1 text-xs font-bold text-white">
               {discount}%

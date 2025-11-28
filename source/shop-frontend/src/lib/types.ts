@@ -25,6 +25,7 @@ export interface CartItem {
   optionStockId?: number;
   quantity: number;
   price: number;
+  createdAt?: string;
 }
 
 export interface Cart {

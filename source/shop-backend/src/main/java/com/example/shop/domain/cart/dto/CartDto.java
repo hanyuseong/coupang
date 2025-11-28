@@ -38,6 +38,7 @@ public class CartDto {
                         .optionStockId(item.getOptionStock() != null ? item.getOptionStock().getOptionStockId() : null)
                         .quantity(item.getQuantity())
                         .price(item.getPrice() != null ? item.getPrice() : item.getProduct().getPrice())
+                        .createdAt(item.getCreatedAt() != null ? item.getCreatedAt().toString() : null)
                         .build())
                 .collect(Collectors.toList());
 

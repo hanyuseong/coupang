@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Product } from "@/lib/types";
 import { calcDiscountPercent, formatCurrency } from "@/lib/utils";
 import Image from "next/image";
@@ -30,42 +31,42 @@ export function DealRail({ products }: DealRailProps) {
             product.discountPrice,
           );
 
+          // Use local image based on productId if thumbnail is missing
+          const thumbnailSrc = product.thumbnail || `/images/${product.productId}.png`;
+
           return (
-            <article
+            <Link
               key={product.productId}
-              className="min-w-[220px] flex-1 rounded-2xl border border-slate-100 bg-slate-50 p-3"
+              href={`/products/${product.productId}`}
+              className="min-w-[220px] flex-1"
             >
-              <div className="relative h-36 overflow-hidden rounded-2xl bg-white">
-                {product.thumbnail ? (
+              <article className="h-full rounded-2xl border border-slate-100 bg-slate-50 p-3 transition hover:-translate-y-1 hover:shadow-md">
+                <div className="relative h-36 overflow-hidden rounded-2xl bg-white">
                   <Image
-                    src={product.thumbnail}
+                    src={thumbnailSrc}
                     alt={product.name}
                     fill
                     className="object-cover"
                     sizes="220px"
                   />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-xs text-slate-400">
-                    이미지 준비중
-                  </div>
-                )}
-                {discount && (
-                  <div className="absolute left-3 top-3 rounded-full bg-coupang-red px-2 py-1 text-[11px] font-bold text-white">
-                    {discount}% OFF
-                  </div>
-                )}
-              </div>
-              <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-slate-800">
-                {product.name}
-              </h3>
-              <p className="mt-1 text-lg font-extrabold text-coupang-blue">
-                {formatCurrency(product.discountPrice ?? product.price)}
-              </p>
-              <p className="text-xs text-slate-400">
-                리뷰 {product.reviewCount?.toLocaleString() ?? 0}건 · ⭐
-                {product.rating?.toFixed(1) ?? "4.5"}
-              </p>
-            </article>
+                  {discount && (
+                    <div className="absolute left-3 top-3 rounded-full bg-coupang-red px-2 py-1 text-[11px] font-bold text-white">
+                      {discount}% OFF
+                    </div>
+                  )}
+                </div>
+                <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-slate-800">
+                  {product.name}
+                </h3>
+                <p className="mt-1 text-lg font-extrabold text-coupang-blue">
+                  {formatCurrency(product.discountPrice ?? product.price)}
+                </p>
+                <p className="text-xs text-slate-400">
+                  리뷰 {product.reviewCount?.toLocaleString() ?? 0}건 · ⭐
+                  {product.rating?.toFixed(1) ?? "4.5"}
+                </p>
+              </article>
+            </Link>
           );
         })}
       </div>

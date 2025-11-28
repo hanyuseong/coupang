@@ -16,19 +16,22 @@ export function HeroBanner({
 
     const slides = [
         {
-            title: "🎉 신규회원 특별 혜택",
-            subtitle: "지금 가입하고 10% 쿠폰 받기",
-            bg: "from-purple-600 via-purple-700 to-indigo-800"
+            image: "/banners/banner_electronics.png",
+            alt: "Electronics Sale",
+            title: "디지털 가전 특가",
+            subtitle: "최신 노트북/스마트폰 최대 30% 할인"
         },
         {
-            title: "⚡ 오늘만 특가",
-            subtitle: "인기 상품 최대 70% 할인",
-            bg: "from-orange-500 via-red-600 to-pink-700"
+            image: "/banners/banner_fashion.png",
+            alt: "Fashion Sale",
+            title: "S/S 패션 위크",
+            subtitle: "트렌디한 봄 신상 아이템"
         },
         {
-            title: "🚀 무료배송",
-            subtitle: "전 상품 무료배송 + 당일배송",
-            bg: "from-blue-600 via-cyan-600 to-teal-700"
+            image: "/banners/banner_fresh.png",
+            alt: "Fresh Food",
+            title: "로켓프레시",
+            subtitle: "신선한 식재료 새벽 도착"
         }
     ];
 
@@ -40,21 +43,28 @@ export function HeroBanner({
     }, [slides.length]);
 
     return (
-        <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+        <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl bg-slate-100">
             {slides.map((slide, index) => (
                 <div
                     key={index}
                     className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
                         }`}
                 >
-                    <div className={`w-full h-full bg-gradient-to-br ${slide.bg} flex flex-col items-center justify-center text-white p-8`}>
-                        <h1 className="text-5xl font-extrabold mb-4 drop-shadow-lg animate-fade-in">
+                    <Image
+                        src={slide.image}
+                        alt={slide.alt}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
+                        <h1 className="text-4xl font-extrabold mb-2 drop-shadow-lg animate-fade-in">
                             {slide.title}
                         </h1>
-                        <p className="text-2xl font-semibold mb-8 drop-shadow-md">
+                        <p className="text-xl font-semibold mb-6 drop-shadow-md">
                             {slide.subtitle}
                         </p>
-                        <button className="bg-white text-coupang-blue px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-lg">
+                        <button className="w-fit bg-white text-coupang-blue px-6 py-3 rounded-full font-bold text-base hover:scale-105 transition-transform shadow-lg">
                             자세히 보기 →
                         </button>
                     </div>
@@ -62,7 +72,7 @@ export function HeroBanner({
             ))}
 
             {/* Slide indicators */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+            <div className="absolute bottom-6 right-8 flex gap-2">
                 {slides.map((_, index) => (
                     <button
                         key={index}

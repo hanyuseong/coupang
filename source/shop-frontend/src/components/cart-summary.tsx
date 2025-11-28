@@ -8,11 +8,27 @@ type CartSummaryProps = {
 
 export function CartSummary({ cart }: CartSummaryProps) {
   const items = cart.cartItems ?? [];
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalAmount =
-    cart.totalAmount ??
-    items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryFee = cart.deliveryFee ?? 0;
+
+  // Filter items added today
+  const today = new Date().toDateString();
+  const todayItems = items.filter(item => {
+    if (!item.createdAt) return false;
+    return new Date(item.createdAt).toDateString() === today;
+  });
+
+  const itemCount = todayItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalAmount = todayItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const deliveryFee = totalAmount >= 30000 ? 0 : 3000; // Recalculate delivery fee for today's items logic, or use cart's if it applies to whole cart. 
+  // User asked for "actual count and product amount + delivery fee = payment amount". 
+  // If we show "Today's items", the amounts should reflect that.
+  // However, delivery fee usually applies to the whole cart order. 
+  // Let's assume the user wants to see the cost for *these* items.
+  // But wait, if I buy today's items with yesterday's items, the delivery fee might be waived.
+  // For "Today's Cart Summary", it's safer to show the total for today's items.
+
+  // Let's stick to the requested logic: "Check date added today, show actual count and product amount + delivery fee = payment amount based on that".
+
+  const finalDeliveryFee = totalAmount > 0 ? (totalAmount >= 30000 ? 0 : 3000) : 0;
 
   return (
     <section className="rounded-3xl bg-gradient-to-br from-white via-white to-coupang-gray p-5 shadow-floating">
@@ -54,10 +70,10 @@ export function CartSummary({ cart }: CartSummaryProps) {
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm font-semibold text-slate-700">
         <span>상품금액 {formatCurrency(totalAmount)}</span>
         <span className="text-slate-400">+</span>
-        <span>배송비 {formatCurrency(deliveryFee)}</span>
+        <span>배송비 {formatCurrency(finalDeliveryFee)}</span>
         <span className="text-slate-400">=</span>
         <span className="text-xl font-extrabold text-coupang-blue">
-          결제예상 {formatCurrency(totalAmount + deliveryFee)}
+          결제예상 {formatCurrency(totalAmount + finalDeliveryFee)}
         </span>
       </div>
     </section>
