@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" className="scroll-smooth">
       <body className={`${notoSans.variable} font-sans`}>{children}</body>
     </html>
   );

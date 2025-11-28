@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/coupang?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+
+jwt:
+  secret: "SGVsbG9Xb3JsZFRoaXNJc0FTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb24="
+  access-token-expiration: 3600000
+  refresh-token-expiration: 1209600000
+
+server:
+  port: 8080
+
+logging:
+  file:
+    name: logs/backend.log
+  level:
+    com.example.shop.domain.member: INFO
+    org.springframework.security: DEBUG

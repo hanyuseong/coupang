@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 type HeroBannerProps = {
     title?: string;
@@ -16,22 +17,25 @@ export function HeroBanner({
 
     const slides = [
         {
-            image: "/banners/banner_electronics.png",
+            image: "/banners/banner_electronics_new.png",
             alt: "Electronics Sale",
             title: "디지털 가전 특가",
-            subtitle: "최신 노트북/스마트폰 최대 30% 할인"
+            subtitle: "최신 노트북/스마트폰 최대 30% 할인",
+            link: "/exhibitions/digital-electronics"
         },
         {
-            image: "/banners/banner_fashion.png",
+            image: "/banners/banner_fashion_new.png",
             alt: "Fashion Sale",
             title: "S/S 패션 위크",
-            subtitle: "트렌디한 봄 신상 아이템"
+            subtitle: "트렌디한 봄 신상 아이템",
+            link: "/exhibitions/summer-fashion"
         },
         {
-            image: "/banners/banner_fresh.png",
+            image: "/banners/banner_fresh_person.png",
             alt: "Fresh Food",
             title: "로켓프레시",
-            subtitle: "신선한 식재료 새벽 도착"
+            subtitle: "신선한 식재료 새벽 도착",
+            link: "/exhibitions/rocket-fresh"
         }
     ];
 
@@ -64,9 +68,11 @@ export function HeroBanner({
                         <p className="text-xl font-semibold mb-6 drop-shadow-md">
                             {slide.subtitle}
                         </p>
-                        <button className="w-fit bg-white text-coupang-blue px-6 py-3 rounded-full font-bold text-base hover:scale-105 transition-transform shadow-lg">
-                            자세히 보기 →
-                        </button>
+                        <Link href={slide.link || "#"}>
+                            <button className="w-fit bg-white text-coupang-blue px-6 py-3 rounded-full font-bold text-base hover:scale-105 transition-transform shadow-lg">
+                                자세히 보기 →
+                            </button>
+                        </Link>
                     </div>
                 </div>
             ))}
@@ -78,8 +84,8 @@ export function HeroBanner({
                         key={index}
                         onClick={() => setCurrentSlide(index)}
                         className={`w-3 h-3 rounded-full transition-all ${index === currentSlide
-                                ? "bg-white w-8"
-                                : "bg-white/50 hover:bg-white/75"
+                            ? "bg-white w-8"
+                            : "bg-white/50 hover:bg-white/75"
                             }`}
                         aria-label={`슬라이드 ${index + 1}`}
                     />
