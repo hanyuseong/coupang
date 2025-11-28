@@ -1,10 +1,10 @@
-import { CategoryMenu } from "@/components/category-menu";
+import { CategorySidebar } from "@/components/category-sidebar";
+import { HeroBanner } from "@/components/hero-banner";
 import { CartSummary } from "@/components/cart-summary";
 import { DealRail } from "@/components/deal-rail";
 import { FooterLinks } from "@/components/footer-links";
 import { OrderStatus } from "@/components/order-status";
 import { ProductGrid } from "@/components/product-grid";
-import { PromoBanner } from "@/components/promo-banner";
 import { ReviewHighlight } from "@/components/review-highlight";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -52,8 +52,13 @@ export default async function HomePage({
         cartCount={cart.cartItems?.length ?? 0}
       />
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-        <PromoBanner product={productGroups.highlighted} />
-        <CategoryMenu categories={categories} />
+        {/* Hero Section: Category Sidebar + Banner */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          <CategorySidebar categories={categories} />
+          <div className="flex-1">
+            <HeroBanner />
+          </div>
+        </div>
 
         <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">

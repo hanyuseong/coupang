@@ -34,15 +34,6 @@ export function ProductGrid({
           <h2 className="text-xl font-bold text-slate-900">{title}</h2>
           {subtitle && <p className="text-sm text-slate-500">{subtitle}</p>}
         </div>
-        {hasHiddenItems && !showAll && (
-          <button
-            type="button"
-            className="text-sm font-semibold text-coupang-blue"
-            onClick={() => setShowAll(true)}
-          >
-            전체 보기 &rarr;
-          </button>
-        )}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

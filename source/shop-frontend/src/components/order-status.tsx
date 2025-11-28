@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Order } from "@/lib/types";
 import { formatCurrency, formatDateLabel } from "@/lib/utils";
 
@@ -17,9 +18,12 @@ export function OrderStatus({ orders }: OrderStatusProps) {
           <p className="text-xs font-semibold text-coupang-blue">주문현황</p>
           <h2 className="text-xl font-bold text-slate-900">최근 주문 추적</h2>
         </div>
-        <button className="text-sm font-semibold text-coupang-blue">
+        <Link
+          href="/orders"
+          className="text-sm font-semibold text-coupang-blue hover:underline"
+        >
           주문 상세보기 →
-        </button>
+        </Link>
       </div>
 
       <div className="mt-4 space-y-4">
@@ -50,18 +54,16 @@ export function OrderStatus({ orders }: OrderStatusProps) {
                 {statusSteps.map((step, idx) => (
                   <div key={step} className="flex items-center gap-2">
                     <div
-                      className={`size-8 rounded-full border-2 text-xs font-bold ${
-                        idx <= stepIndex
+                      className={`size-8 rounded-full border-2 text-xs font-bold ${idx <= stepIndex
                           ? "border-coupang-blue bg-coupang-blue text-white"
                           : "border-slate-200 text-slate-400"
-                      } flex items-center justify-center`}
+                        } flex items-center justify-center`}
                     >
                       {idx + 1}
                     </div>
                     <span
-                      className={`text-xs font-semibold ${
-                        idx <= stepIndex ? "text-coupang-blue" : "text-slate-400"
-                      }`}
+                      className={`text-xs font-semibold ${idx <= stepIndex ? "text-coupang-blue" : "text-slate-400"
+                        }`}
                     >
                       {step}
                     </span>

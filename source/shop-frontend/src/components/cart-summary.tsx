@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Cart } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
@@ -23,9 +24,12 @@ export function CartSummary({ cart }: CartSummaryProps) {
             로켓배송 상품은 오후 11시 이전 결제 시 내일 새벽 도착
           </p>
         </div>
-        <button className="rounded-full bg-coupang-blue px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-coupang-navy">
-          결제하기
-        </button>
+        <Link
+          href="/cart"
+          className="text-sm font-semibold text-coupang-blue hover:underline"
+        >
+          전체 보기 →
+        </Link>
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
