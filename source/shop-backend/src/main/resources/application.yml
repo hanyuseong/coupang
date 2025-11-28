@@ -8,7 +8,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
@@ -16,7 +16,7 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
 
 jwt:
   secret: "SGVsbG9Xb3JsZFRoaXNJc0FTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb24="
@@ -27,6 +27,8 @@ server:
   port: 8080
 
 logging:
+  file:
+    name: logs/backend.log
   level:
     com.example.shop.domain.member: INFO
     org.springframework.security: DEBUG

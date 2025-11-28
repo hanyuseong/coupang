@@ -1,5 +1,33 @@
 -- SQL statements for initializing the database schema
 
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS review_image;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS lightning_deal;
+DROP TABLE IF EXISTS recommended_keyword;
+DROP TABLE IF EXISTS admin_user;
+DROP TABLE IF EXISTS banner;
+DROP TABLE IF EXISTS point_history;
+DROP TABLE IF EXISTS member_coupon;
+DROP TABLE IF EXISTS coupon;
+DROP TABLE IF EXISTS payment;
+DROP TABLE IF EXISTS order_delivery;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS order_info;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS cart;
+DROP TABLE IF EXISTS product_qna;
+DROP TABLE IF EXISTS product_image;
+DROP TABLE IF EXISTS product_option_stock;
+DROP TABLE IF EXISTS product_option;
+DROP TABLE IF EXISTS product_option_group;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS member_social;
+DROP TABLE IF EXISTS member_address;
+DROP TABLE IF EXISTS member;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- 1. Member Table
 CREATE TABLE member (
     member_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -158,7 +186,7 @@ CREATE TABLE cart_item (
 );
 
 -- 15. Order Table
-CREATE TABLE `order` (
+CREATE TABLE order_info (
     order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT,
     address_id BIGINT,
@@ -181,7 +209,7 @@ CREATE TABLE order_item (
     quantity INT,
     price INT,
     discount_price INT,
-    FOREIGN KEY (order_id) REFERENCES `order`(order_id),
+    FOREIGN KEY (order_id) REFERENCES order_info(order_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (option_stock_id) REFERENCES product_option_stock(option_stock_id)
 );
@@ -194,7 +222,7 @@ CREATE TABLE order_delivery (
     tracking_number VARCHAR(50),
     courier VARCHAR(50),
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES `order`(order_id)
+    FOREIGN KEY (order_id) REFERENCES order_info(order_id)
 );
 
 -- 18. Payment Table
@@ -208,7 +236,7 @@ CREATE TABLE payment (
     pg_tid VARCHAR(100),
     requested_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     approved_at DATETIME,
-    FOREIGN KEY (order_id) REFERENCES `order`(order_id)
+    FOREIGN KEY (order_id) REFERENCES order_info(order_id)
 );
 
 -- 19. Coupon Table

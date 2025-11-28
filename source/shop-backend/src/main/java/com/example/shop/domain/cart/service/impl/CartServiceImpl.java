@@ -113,7 +113,7 @@ public class CartServiceImpl implements CartService {
 
     private Cart findCartOrCreate(Long memberId) {
         if (memberId != null) {
-            return cartRepository.findByMember_MemberId(memberId)
+            return cartRepository.findFirstByMember_MemberId(memberId)
                     .orElseGet(() -> createCart(memberId));
         }
 

@@ -89,23 +89,8 @@ export const fallbackCategories: Category[] = [
 ];
 
 export const fallbackCart: Cart = {
-  cartItems: [
-    {
-      cartItemId: 1,
-      productId: 1001,
-      productName: "제주 노지 감귤 3kg",
-      quantity: 2,
-      price: 14900,
-    },
-    {
-      cartItemId: 2,
-      productId: 1005,
-      productName: "쿠팡 와우 에코백",
-      quantity: 1,
-      price: 8900,
-    },
-  ],
-  totalAmount: 38700,
+  cartItems: [],
+  totalAmount: 0,
   deliveryFee: 0,
 };
 
