@@ -18,7 +18,7 @@ export function FooterLinks() {
           </ul>
         ))}
         <div className="text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} Coupang Style Frontend.</p>
+          <p>© {new Date().getFullYear()} Hans Shop Frontend.</p>
           <p>본 페이지는 데모용 UI로 실 서비스가 아닙니다.</p>
         </div>
       </div>

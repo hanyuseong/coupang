@@ -103,139 +103,126 @@ export async function fetchProduct(productId: number): Promise<Product | null> {
 export async function fetchCategories(): Promise<Category[]> {
   const payload = await safeRequest<ApiResponse<Category[]>>("/api/categories");
   return payload?.data && Array.isArray(payload.data)
-    ? payload.data
-    : fallbackCategories;
-}
 
-export async function fetchRecommendedKeywords(): Promise<string[]> {
-  const payload = await safeRequest<ApiResponse<string[]>>("/api/keywords/recommended");
-  return payload?.data ?? ["로켓배송", "로켓프레시", "쿠팡비즈", "골드박스", "와우할인", "여행/티켓"];
-}
+  export async function fetchRecentReviews(): Promise<Review[]> {
+    const payload = await safeRequest<ApiResponse<Review[]>>("/api/reviews/recent");
+    return payload?.data ?? [];
+  }
 
-export async function fetchLightningDeals(): Promise<Product[]> {
-  const payload = await safeRequest<ApiResponse<Product[]>>("/api/lightning-deals");
-  return payload?.data ?? [];
-}
+  export async function fetchCart(): Promise<Cart> {
+    const payload = await safeRequest<ApiResponse<Cart>>("/api/cart");
+    return payload?.data ?? fallbackCart;
+  }
 
-export async function fetchRecentReviews(): Promise<Review[]> {
-  const payload = await safeRequest<ApiResponse<Review[]>>("/api/reviews/recent");
-  return payload?.data ?? [];
-}
+  export async function addCartItem(
+    productId: number,
+    quantity = 1,
+    optionStockId?: number,
+  ): Promise<boolean> {
+    const body = {
+      productId,
+      quantity,
+      ...(optionStockId ? { optionStockId } : {}),
+    };
 
-export async function fetchCart(): Promise<Cart> {
-  const payload = await safeRequest<ApiResponse<Cart>>("/api/cart");
-  return payload?.data ?? fallbackCart;
-}
-
-export async function addCartItem(
-  productId: number,
-  quantity = 1,
-  optionStockId?: number,
-): Promise<boolean> {
-  const body = {
-    productId,
-    quantity,
-    ...(optionStockId ? { optionStockId } : {}),
-  };
-
-  const payload = await safeRequest<ApiResponse<string>>("/api/cart", {
-    method: "POST",
-    body: JSON.stringify(body),
-  });
-
-  return Boolean(payload?.success);
-}
-
-export async function removeCartItem(cartItemId: number): Promise<boolean> {
-  const payload = await safeRequest<ApiResponse<string>>(`/api/cart/${cartItemId}`, {
-    method: "DELETE",
-  });
-  return Boolean(payload?.success);
-}
-
-export async function updateCartItemQuantity(
-  cartItemId: number,
-  quantity: number
-): Promise<boolean> {
-  const payload = await safeRequest<ApiResponse<string>>(`/api/cart/${cartItemId}`, {
-    method: "PUT",
-    body: JSON.stringify({ quantity }),
-  });
-  return Boolean(payload?.success);
-}
-
-export async function createOrder(orderData: {
-  items: Array<{
-    productId: number;
-    productName: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  deliveryFee: number;
-}): Promise<{ success: boolean; orderId?: number }> {
-  try {
-    const payload = await safeRequest<ApiResponse<{ orderId: number }>>("/api/orders", {
+    const payload = await safeRequest<ApiResponse<string>>("/api/cart", {
       method: "POST",
-      body: JSON.stringify(orderData),
+      body: JSON.stringify(body),
     });
 
-    if (payload?.success && payload.data) {
-      return { success: true, orderId: payload.data.orderId };
+    return Boolean(payload?.success);
+  }
+
+  export async function removeCartItem(cartItemId: number): Promise<boolean> {
+    const payload = await safeRequest<ApiResponse<string>>(`/api/cart/${cartItemId}`, {
+      method: "DELETE",
+    });
+    return Boolean(payload?.success);
+  }
+
+  export async function updateCartItemQuantity(
+    cartItemId: number,
+    quantity: number
+  ): Promise<boolean> {
+    const payload = await safeRequest<ApiResponse<string>>(`/api/cart/${cartItemId}`, {
+      method: "PUT",
+      body: JSON.stringify({ quantity }),
+    });
+    return Boolean(payload?.success);
+  }
+
+  export async function createOrder(orderData: {
+    items: Array<{
+      productId: number;
+      productName: string;
+      quantity: number;
+      price: number;
+    }>;
+    totalAmount: number;
+    deliveryFee: number;
+  }): Promise<{ success: boolean; orderId?: number }> {
+    try {
+      const payload = await safeRequest<ApiResponse<{ orderId: number }>>("/api/orders", {
+        method: "POST",
+        body: JSON.stringify(orderData),
+      });
+
+      if (payload?.success && payload.data) {
+        return { success: true, orderId: payload.data.orderId };
+      }
+      return { success: false };
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      return { success: false };
     }
-    return { success: false };
-  } catch (error) {
-    console.error("Failed to create order:", error);
-    return { success: false };
-  }
-}
-
-export async function fetchOrders(): Promise<Order[]> {
-  const payload = await safeRequest<ApiResponse<Order[]>>("/api/orders");
-  return payload?.data && Array.isArray(payload.data)
-    ? payload.data
-    : fallbackOrders;
-}
-
-export async function fetchReviews(
-  productId: number | undefined,
-): Promise<Review[]> {
-  if (!productId) {
-    return fallbackReviews;
   }
 
-  const payload = await safeRequest<ApiResponse<Review[]>>(
-    `/api/reviews/${productId}`,
-  );
+  export async function fetchOrders(): Promise<Order[]> {
+    const payload = await safeRequest<ApiResponse<Order[]>>("/api/orders");
+    return payload?.data && Array.isArray(payload.data)
+      ? payload.data
+      : fallbackOrders;
+  }
 
-  return payload?.data && Array.isArray(payload.data)
-    ? payload.data
-    : fallbackReviews;
-}
-export type AuthResponse = {
-  accessToken: string;
-  refreshToken: string;
-};
+  export async function fetchReviews(
+    productId: number | undefined,
+  ): Promise<Review[]> {
+    if (!productId) {
+      return fallbackReviews;
+    }
 
-export async function login(email: string, password: string): Promise<AuthResponse | null> {
-  const payload = await safeRequest<ApiResponse<AuthResponse>>("/api/auth/login", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-  });
-  return payload?.data ?? null;
-}
+    const payload = await safeRequest<ApiResponse<Review[]>>(
+      `/api/reviews/${productId}`,
+    );
 
-export type SignupRequest = {
-  email: string;
-  password: string;
-  name: string;
-  phone: string;
-};
+    return payload?.data && Array.isArray(payload.data)
+      ? payload.data
+      : fallbackReviews;
+  }
+  export type AuthResponse = {
+    accessToken: string;
+    refreshToken: string;
+  };
 
-export async function signup(request: SignupRequest): Promise<boolean> {
-  const payload = await safeRequest<ApiResponse<string>>("/api/auth/signup", {
-    method: "POST",
-    body: JSON.stringify(request),
-  });
-  return payload?.success ?? false;
-}
+  export async function login(email: string, password: string): Promise<AuthResponse | null> {
+    const payload = await safeRequest<ApiResponse<AuthResponse>>("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    return payload?.data ?? null;
+  }
+
+  export type SignupRequest = {
+    email: string;
+    password: string;
+    name: string;
+    phone: string;
+  };
+
+  export async function signup(request: SignupRequest): Promise<boolean> {
+    const payload = await safeRequest<ApiResponse<string>>("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+    return payload?.success ?? false;
+  }

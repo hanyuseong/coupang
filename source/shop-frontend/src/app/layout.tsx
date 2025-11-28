@@ -10,9 +10,9 @@ const notoSans = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "쿠팡 스타일 상점 | Shop Frontend",
+  title: "한스 스타일 상점 | Shop Frontend",
   description:
-    "쿠팡 감성의 UI로 상품 탐색, 장바구니, 주문 현황을 한 눈에 확인할 수 있는 Next.js 쇼핑몰 프론트엔드",
+    "한스 감성의 UI로 상품 탐색, 장바구니, 주문 현황을 한 눈에 확인할 수 있는 Next.js 쇼핑몰 프론트엔드",
   metadataBase: new URL("http://localhost:3000"),
 };
 

@@ -9,6 +9,7 @@ type AddToCartButtonProps = {
   quantity?: number;
   optionStockId?: number;
   className?: string;
+  redirect?: boolean;
 };
 
 export function AddToCartButton({
@@ -16,18 +17,26 @@ export function AddToCartButton({
   quantity = 1,
   optionStockId,
   className,
+  redirect = true,
 }: AddToCartButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent parent link clicks
     if (loading) return;
     setLoading(true);
     try {
       const ok = await addCartItem(productId, quantity, optionStockId);
       if (ok) {
         router.refresh();
-        router.push("/cart");
+        if (redirect) {
+          router.push("/cart");
+        } else {
+          if (confirm("상품을 장바구니에 담았습니다. 장바구니로 이동하시겠습니까?")) {
+            router.push("/cart");
+          }
+        }
       } else {
         // Check if user is logged in
         const token = localStorage.getItem("accessToken");

@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/lib/types";
 import { calcDiscountPercent, formatCurrency } from "@/lib/utils";
+import { addCartItem } from "@/lib/api";
 
 type ProductCardProps = {
   product: Product;
@@ -10,6 +13,51 @@ type ProductCardProps = {
 
 export function ProductCard({ product, highlight }: ProductCardProps) {
   const discount = calcDiscountPercent(product.price, product.discountPrice);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+
+    console.log("Add to cart clicked for product:", product.productId);
+
+    try {
+      const success = await addCartItem(product.productId, 1);
+      console.log("Add cart result:", success);
+
+      if (success) {
+        console.log("Success! Asking user about cart navigation");
+        if (confirm("상품을 장바구니에 담았습니다. 장바구니로 이동하시겠습니까?")) {
+          window.location.href = "/cart";
+        }
+      } else {
+        console.log("Failed to add to cart, checking login status");
+        // Check if user is logged in
+        const token = localStorage.getItem("accessToken");
+        console.log("Token exists:", !!token);
+
+        if (!token) {
+          window.location.href = "/login";
+        } else {
+          console.log("Token exists but add failed");
+          alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+      console.log("Error occurred, checking login status");
+
+      // Also check login on error
+      const token = localStorage.getItem("accessToken");
+      console.log("Token exists (in catch):", !!token);
+
+      if (!token) {
+        window.location.href = "/login";
+      } else {
+        // If token exists but an error occurred, redirect to home or show a generic error page
+        window.location.href = "/"; // Redirect to home page
+      }
+    }
+  };
 
   return (
     <article
@@ -66,7 +114,10 @@ export function ProductCard({ product, highlight }: ProductCardProps) {
           </div>
         </div>
       </Link>
-      <button className="mt-auto w-full rounded-2xl bg-coupang-blue/10 py-2 text-sm font-semibold text-coupang-blue transition hover:bg-coupang-blue hover:text-white">
+      <button
+        onClick={handleAddToCart}
+        className="mt-auto w-full rounded-2xl bg-coupang-blue/10 py-2 text-sm font-semibold text-coupang-blue transition hover:bg-coupang-blue hover:text-white"
+      >
         장바구니 담기
       </button>
     </article>

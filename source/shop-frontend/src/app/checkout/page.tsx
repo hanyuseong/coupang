@@ -115,7 +115,7 @@ export default function CheckoutPage() {
             <header className="bg-white border-b border-slate-200">
                 <div className="mx-auto max-w-6xl px-4 py-4">
                     <Link href="/" className="text-2xl font-extrabold text-coupang-blue">
-                        Coupang
+                        Hans
                     </Link>
                 </div>
             </header>

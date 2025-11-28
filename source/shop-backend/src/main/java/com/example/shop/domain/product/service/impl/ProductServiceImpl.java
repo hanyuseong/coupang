@@ -97,6 +97,9 @@ public class ProductServiceImpl implements ProductService {
                 .discountPrice(product.getDiscountPrice())
                 .brand(product.getBrand())
                 .description(product.getDescription())
+                .thumbnail(product.getImages() != null && !product.getImages().isEmpty()
+                        ? product.getImages().get(0).getImageUrl()
+                        : null)
                 .build();
     }
 }

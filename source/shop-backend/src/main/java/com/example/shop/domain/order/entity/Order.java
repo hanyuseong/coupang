@@ -45,9 +45,6 @@ public class Order extends BaseEntity {
     private int totalAmount;
     private int deliveryFee;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 }

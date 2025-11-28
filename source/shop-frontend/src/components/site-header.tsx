@@ -4,7 +4,7 @@ import { SearchBar } from "./search-bar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchCurrentMember } from "@/lib/member-api";
-import { Member } from "@/lib/types";
+import { fetchCart } from "@/lib/api";
 
 type SiteHeaderProps = {
   suggestionKeywords: string[];
@@ -17,12 +17,36 @@ type SiteHeaderProps = {
 export function SiteHeader({
   suggestionKeywords,
   recommendedKeywords = [],
-  cartCount,
+  cartCount: initialCartCount,
   initialIsLoggedIn = false,
   initialUserName = "",
 }: SiteHeaderProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
   const [userName, setUserName] = useState(initialUserName);
+  const [cartCount, setCartCount] = useState(initialCartCount);
+
+  useEffect(() => {
+    const updateCartCount = async () => {
+      try {
+        const cart = await fetchCart();
+        setCartCount(cart.cartItems?.length ?? 0);
+      } catch (error) {
+        console.error("Failed to update cart count:", error);
+      }
+    };
+
+    // Initial fetch to ensure sync
+    updateCartCount();
+
+    const handleCartUpdate = () => {
+      updateCartCount();
+    };
+
+    window.addEventListener("cart-updated", handleCartUpdate);
+    return () => {
+      window.removeEventListener("cart-updated", handleCartUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -50,7 +74,7 @@ export function SiteHeader({
               <p className="text-xs text-white/80">새벽 7시 도착 · 로켓배송 전용관</p>
             </div>
             <Link href="/" className="text-3xl font-extrabold tracking-tight hover:opacity-90">
-              Coupang Style
+              Hans Shop
             </Link>
           </div>
 
@@ -68,9 +92,9 @@ export function SiteHeader({
 
             {/* 네비게이션 메뉴 */}
             <div className="flex items-center gap-6">
-              <Link href="/login" className="flex flex-col items-center gap-1 text-white/80">
+              <Link href={isLoggedIn ? "/orders" : "/login"} className="flex flex-col items-center gap-1 text-white/80">
                 <span className="rounded-lg bg-white/15 px-2 py-1 text-[10px]">주문</span>
-                <span>마이쿠팡</span>
+                <span>마이한스</span>
               </Link>
               <button className="flex flex-col items-center gap-1 text-white/80">
                 <span className="rounded-lg bg-white/15 px-2 py-1 text-[10px]">혜택</span>
