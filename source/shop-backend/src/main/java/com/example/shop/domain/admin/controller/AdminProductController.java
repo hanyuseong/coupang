@@ -1,46 +1,56 @@
 package com.example.shop.domain.admin.controller;
 
-import com.example.shop.global.common.ApiResponse;
-import com.example.shop.domain.product.dto.ProductDto;
-import com.example.shop.domain.product.service.ProductService;
-import org.springframework.http.HttpStatus;
+import com.example.shop.domain.admin.dto.AdminProductDto;
+import com.example.shop.domain.admin.service.AdminProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/products")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3001")
 public class AdminProductController {
 
-    private final ProductService productService;
+    private final AdminProductService adminProductService;
 
-    public AdminProductController(ProductService productService) {
-        this.productService = productService;
+    @GetMapping
+    public List<AdminProductDto> getAllProducts() {
+        return adminProductService.getAllProducts();
+    }
+
+    @GetMapping("/{id}")
+    public AdminProductDto getProductById(@PathVariable Long id) {
+        return adminProductService.getProductById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductDto>> createProduct(@Valid @RequestBody ProductDto productDto) {
-        ProductDto createdProduct = productService.createProduct(productDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(createdProduct));
+    public AdminProductDto createProduct(@RequestBody AdminProductDto product) {
+        return adminProductService.createProduct(product);
     }
 
-    @PutMapping("/{productId}")
-    public ResponseEntity<ApiResponse<ProductDto>> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductDto productDto) {
-        ProductDto updatedProduct = productService.updateProduct(productId, productDto);
-        return ResponseEntity.ok(ApiResponse.ok(updatedProduct));
+    @PutMapping("/{id}")
+    public AdminProductDto updateProduct(@PathVariable Long id, @RequestBody AdminProductDto product) {
+        return adminProductService.updateProduct(id, product);
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable Long productId) {
-        productService.deleteProduct(productId);
-        return ResponseEntity.ok(ApiResponse.ok("Product deleted successfully"));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        adminProductService.deleteProduct(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProducts() {
-        List<ProductDto> products = productService.getAllProducts();
-        return ResponseEntity.ok(ApiResponse.ok(products));
+    @PostMapping("/{id}/images")
+    public com.example.shop.domain.product.dto.ProductImageDto uploadImage(@PathVariable Long id,
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        return adminProductService.uploadImage(id, file);
+    }
+
+    @DeleteMapping("/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
+        adminProductService.deleteImage(imageId);
+        return ResponseEntity.ok().build();
     }
 }

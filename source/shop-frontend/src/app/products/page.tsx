@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/site-header";
 import { FooterLinks } from "@/components/footer-links";
 import { ProductCard } from "@/components/product-card";
 import { CategorySidebar } from "@/components/category-sidebar";
+import { ProductSort } from "@/components/product-sort";
 import {
     fetchProducts,
     fetchCategories,
@@ -18,6 +19,7 @@ type ProductsPageProps = {
         minPrice?: string;
         maxPrice?: string;
         page?: string;
+        sort?: string;
     };
 };
 
@@ -34,6 +36,7 @@ export default async function ProductsPage({
         ? parseInt(searchParams.maxPrice)
         : undefined;
     const page = searchParams.page ? parseInt(searchParams.page) - 1 : 0;
+    const sort = searchParams.sort ? [searchParams.sort] : ["productId,desc"];
 
     const [products, categories, cart, recommendedKeywords] = await Promise.all([
         fetchProducts({
@@ -43,6 +46,7 @@ export default async function ProductsPage({
             maxPrice,
             page,
             size: 20,
+            sort,
         }),
         fetchCategories(),
         fetchCart(),
@@ -82,23 +86,7 @@ export default async function ProductsPage({
 
                     {/* Filters */}
                     <div className="rounded-2xl bg-white p-4 shadow-md">
-                        <div className="flex flex-wrap items-center gap-3">
-                            <span className="text-sm font-semibold text-slate-700">
-                                정렬:
-                            </span>
-                            <button className="rounded-lg bg-coupang-blue px-4 py-2 text-sm font-medium text-white transition hover:bg-coupang-navy">
-                                인기순
-                            </button>
-                            <button className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200">
-                                낮은 가격순
-                            </button>
-                            <button className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200">
-                                높은 가격순
-                            </button>
-                            <button className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200">
-                                최신순
-                            </button>
-                        </div>
+                        <ProductSort />
                     </div>
 
                     {/* Products Grid */}

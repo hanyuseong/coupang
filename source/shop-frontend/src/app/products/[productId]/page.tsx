@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { FooterLinks } from "@/components/footer-links";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { fetchCart, fetchProduct, fetchRecommendedKeywords } from "@/lib/api";
-import { calcDiscountPercent, formatCurrency } from "@/lib/utils";
+import { calcDiscountPercent, formatCurrency, getImageUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +42,7 @@ export default async function ProductDetailPage({
                         <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-slate-100 bg-coupang-gray">
                             {product.thumbnail ? (
                                 <Image
-                                    src={product.thumbnail}
+                                    src={getImageUrl(product.thumbnail, product.productId)}
                                     alt={product.name}
                                     fill
                                     className="object-cover"
@@ -139,8 +139,24 @@ export default async function ProductDetailPage({
                 {/* Product Details Content Placeholder */}
                 <div className="mt-16 border-t border-slate-200 pt-16">
                     <h2 className="mb-8 text-xl font-bold text-slate-800">상품 상세 정보</h2>
-                    <div className="mx-auto flex aspect-[3/4] w-full max-w-3xl items-center justify-center rounded-lg bg-slate-100 text-slate-400">
-                        상품 상세 이미지가 여기에 표시됩니다.
+                    <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center rounded-lg bg-slate-100 text-slate-400">
+                        {product.images && product.images.length > 0 ? (
+                            product.images.map((image, index) => (
+                                <div key={index} className="relative w-full">
+                                    <Image
+                                        src={getImageUrl(image, product.productId)}
+                                        alt={`${product.name} 상세 이미지 ${index + 1}`}
+                                        width={800}
+                                        height={1200}
+                                        className="w-full h-auto object-contain"
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <div className="flex aspect-[3/4] w-full items-center justify-center">
+                                상품 상세 이미지가 여기에 표시됩니다.
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>

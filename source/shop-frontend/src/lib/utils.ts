@@ -14,9 +14,8 @@ export const formatCurrency = (value: number | undefined) => {
 export const formatDateLabel = (value: string | undefined) => {
   if (!value) return "";
   const date = new Date(value);
-  return `${date.getMonth() + 1}.${date.getDate()} ${
-    ["일", "월", "화", "수", "목", "금", "토"][date.getDay()]
-  }`;
+  return `${date.getMonth() + 1}.${date.getDate()} ${["일", "월", "화", "수", "목", "금", "토"][date.getDay()]
+    }`;
 };
 
 export const calcDiscountPercent = (price?: number, discount?: number) => {
@@ -38,4 +37,20 @@ export const splitProducts = (products: Product[]) => {
     .slice(0, 8);
 
   return { highlighted, featured, express, discounted };
+};
+
+export const getImageUrl = (path: string | undefined | null, productId?: number) => {
+  if (!path) return productId ? `/images/${productId}.png` : "/images/placeholder.png";
+  if (path.startsWith("http")) return path;
+
+  // Remove leading slash if present
+  const cleanPath = path.startsWith("/") ? path.substring(1) : path;
+
+  // If path already starts with "images/", append to base URL directly
+  if (cleanPath.startsWith("images/")) {
+    return `http://localhost:8080/${cleanPath}`;
+  }
+
+  // Otherwise, add "images/" prefix
+  return `http://localhost:8080/images/${cleanPath}`;
 };

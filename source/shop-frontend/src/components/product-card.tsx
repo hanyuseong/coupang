@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/lib/types";
-import { calcDiscountPercent, formatCurrency } from "@/lib/utils";
+import { calcDiscountPercent, formatCurrency, getImageUrl } from "@/lib/utils";
 import { addCartItem } from "@/lib/api";
 
 type ProductCardProps = {
@@ -67,7 +67,7 @@ export function ProductCard({ product, highlight }: ProductCardProps) {
       <Link href={`/products/${product.productId}`} className="contents">
         <div className="relative aspect-square w-1/2 mx-auto overflow-hidden rounded-2xl bg-coupang-gray">
           <Image
-            src={product.thumbnail || `/images/${product.productId}.png`}
+            src={getImageUrl(product.thumbnail, product.productId)}
             alt={product.name}
             fill
             className="object-cover"

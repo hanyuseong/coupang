@@ -9,6 +9,7 @@ export interface Product {
   rating?: number;
   reviewCount?: number;
   deliveryType?: string;
+  images?: string[];
 }
 
 export interface Category {

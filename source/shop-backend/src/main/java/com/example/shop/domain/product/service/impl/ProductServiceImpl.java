@@ -100,6 +100,11 @@ public class ProductServiceImpl implements ProductService {
                 .thumbnail(product.getImages() != null && !product.getImages().isEmpty()
                         ? product.getImages().get(0).getImageUrl()
                         : null)
+                .images(product.getImages() != null
+                        ? product.getImages().stream()
+                                .map(com.example.shop.domain.product.entity.ProductImage::getImageUrl)
+                                .collect(Collectors.toList())
+                        : null)
                 .build();
     }
 }

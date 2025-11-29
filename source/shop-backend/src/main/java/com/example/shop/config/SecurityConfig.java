@@ -25,6 +25,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable()) // Allow CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -33,6 +34,12 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
+                                "/images/**")
+                        .permitAll()
+                        // Admin endpoints - permitAll for now (TODO: Add role-based auth later)
+                        .requestMatchers("/api/admin/**").permitAll()
+                        // Public endpoints
+                        .requestMatchers(
                                 "/api/products/**",
                                 "/api/keywords/**",
                                 "/api/lightning-deals/**",

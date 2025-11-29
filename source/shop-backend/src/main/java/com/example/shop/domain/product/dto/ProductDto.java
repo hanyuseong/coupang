@@ -20,6 +20,7 @@ public class ProductDto {
     private double rating;
     private int reviewCount;
     private String deliveryType;
+    private java.util.List<String> images;
 
     public static ProductDto from(com.example.shop.domain.product.entity.Product product) {
         return ProductDto.builder()

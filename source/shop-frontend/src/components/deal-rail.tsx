@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Product } from "@/lib/types";
-import { calcDiscountPercent, formatCurrency } from "@/lib/utils";
+import { calcDiscountPercent, formatCurrency, getImageUrl } from "@/lib/utils";
 import Image from "next/image";
 
 type DealRailProps = {
@@ -32,7 +32,7 @@ export function DealRail({ products }: DealRailProps) {
           );
 
           // Use local image based on productId if thumbnail is missing
-          const thumbnailSrc = product.thumbnail || `/images/${product.productId}.png`;
+          const thumbnailSrc = getImageUrl(product.thumbnail, product.productId);
 
           return (
             <Link
