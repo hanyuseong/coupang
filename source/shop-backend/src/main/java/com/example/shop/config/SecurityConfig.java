@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").permitAll()
                         // Public endpoints
                         .requestMatchers(
+                                "/api/promotions/**",
+                                "/api/categories/**",
                                 "/api/products/**",
                                 "/api/keywords/**",
                                 "/api/lightning-deals/**",

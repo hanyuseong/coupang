@@ -5,7 +5,7 @@ import {
   fallbackProducts,
   fallbackReviews,
 } from "./fallback-data";
-import { ApiResponse, Cart, Category, Order, Product, Review } from "./types";
+import { ApiResponse, Cart, Category, Order, Product, Review, Promotion } from "./types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
@@ -97,6 +97,11 @@ export async function fetchProduct(productId: number): Promise<Product | null> {
   const payload = await safeRequest<ApiResponse<Product>>(
     `/api/products/${productId}`,
   );
+  return payload?.data ?? null;
+}
+
+export async function fetchPromotion(id: number): Promise<Promotion | null> {
+  const payload = await safeRequest<ApiResponse<Promotion>>(`/api/promotions/${id}`);
   return payload?.data ?? null;
 }
 
