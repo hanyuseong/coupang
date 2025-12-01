@@ -34,6 +34,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { X, Upload } from "lucide-react";
+import { getImageUrl } from "@/lib/utils";
 
 const productSchema = z.object({
     name: z.string().min(1, "상품명을 입력해주세요."),
@@ -347,7 +348,7 @@ export function ProductDialog({ open, onOpenChange, product }: ProductDialogProp
                                     {product.images?.map((image) => (
                                         <div key={image.imageId} className="relative group aspect-square border rounded-md overflow-hidden">
                                             <img
-                                                src={`http://localhost:8080${image.imageUrl}`}
+                                                src={getImageUrl(image.imageUrl)}
                                                 alt="Product"
                                                 className="w-full h-full object-cover"
                                             />

@@ -21,8 +21,10 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<OrderDto>> placeOrder(@Valid @RequestBody OrderDto orderDto) {
-        OrderDto createdOrder = orderService.placeOrder(orderDto);
+    public ResponseEntity<ApiResponse<OrderDto>> placeOrder(
+            @Valid @RequestBody OrderDto orderDto,
+            @org.springframework.security.core.annotation.AuthenticationPrincipal String email) {
+        OrderDto createdOrder = orderService.placeOrder(orderDto, email);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(createdOrder));
     }
 

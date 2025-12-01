@@ -13,6 +13,7 @@ import { Edit, Trash2 } from "lucide-react";
 import { Product } from "@/types/product";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProduct } from "@/services/product-service";
+import { getImageUrl } from "@/lib/utils";
 
 interface ProductTableProps {
     products: Product[];
@@ -75,7 +76,7 @@ export function ProductTable({ products, isLoading, onEdit }: ProductTableProps)
                                 {product.images && product.images.length > 0 ? (
                                     <div className="w-12 h-12 relative rounded overflow-hidden border">
                                         <img
-                                            src={`http://localhost:8080${product.images[0].imageUrl}`}
+                                            src={getImageUrl(product.images[0].imageUrl)}
                                             alt={product.name}
                                             className="object-cover w-full h-full"
                                         />

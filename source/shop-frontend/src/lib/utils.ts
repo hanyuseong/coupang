@@ -48,9 +48,9 @@ export const getImageUrl = (path: string | undefined | null, productId?: number)
 
   // If path already starts with "images/", append to base URL directly
   if (cleanPath.startsWith("images/")) {
-    return `http://localhost:8080/${cleanPath}`;
+    return `http://localhost:3000/${cleanPath}`;
   }
 
   // Otherwise, add "images/" prefix
-  return `http://localhost:8080/images/${cleanPath}`;
+  return `http://localhost:3000/images/${cleanPath}`;
 };

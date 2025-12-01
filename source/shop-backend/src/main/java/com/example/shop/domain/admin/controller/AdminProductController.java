@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/products")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3001")
 public class AdminProductController {
 
     private final AdminProductService adminProductService;
@@ -43,9 +42,12 @@ public class AdminProductController {
     }
 
     @PostMapping("/{id}/images")
-    public com.example.shop.domain.product.dto.ProductImageDto uploadImage(@PathVariable Long id,
+    public ResponseEntity<com.example.shop.domain.product.dto.ProductImageDto> uploadImage(@PathVariable Long id,
             @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
-        return adminProductService.uploadImage(id, file);
+        com.example.shop.domain.product.dto.ProductImageDto result = adminProductService.uploadImage(id, file);
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/json")
+                .body(result);
     }
 
     @DeleteMapping("/images/{imageId}")

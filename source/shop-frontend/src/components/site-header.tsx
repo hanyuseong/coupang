@@ -3,7 +3,7 @@
 import { SearchBar } from "./search-bar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { fetchCurrentMember } from "@/lib/member-api";
+import { fetchCurrentMember, logout } from "@/lib/member-api";
 import { fetchCart } from "@/lib/api";
 
 type SiteHeaderProps = {
@@ -62,6 +62,10 @@ export function SiteHeader({
     loadUser();
   }, []);
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <header className="w-full border-b border-white/40 bg-gradient-to-r from-coupang-blue via-coupang-blue to-coupang-navy pb-6 pt-4 text-white shadow-floating">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4">
@@ -80,9 +84,17 @@ export function SiteHeader({
 
           <div className="hidden flex-col items-end gap-2 text-sm font-medium lg:flex">
             {/* 로그인 상태 표시 영역 */}
-            <div className="text-sm text-white/90">
+            <div className="flex items-center gap-2 text-sm text-white/90">
               {isLoggedIn ? (
-                <span className="font-medium">{userName}님 환영합니다.</span>
+                <>
+                  <span className="font-medium">{userName}님 환영합니다.</span>
+                  <button
+                    onClick={handleLogout}
+                    className="rounded bg-white/20 px-3 py-1 text-xs hover:bg-white/30 transition"
+                  >
+                    로그아웃
+                  </button>
+                </>
               ) : (
                 <Link href="/login" className="hover:underline">
                   로그인 해주세요

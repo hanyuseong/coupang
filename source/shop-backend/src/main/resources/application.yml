@@ -40,4 +40,4 @@ logging:
     org.springframework.security: DEBUG
 
 file:
-  upload-dir: uploads
+  upload-dir: D:/privproject/coupang/source/shop-frontend/public/images

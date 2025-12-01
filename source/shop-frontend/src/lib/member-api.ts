@@ -38,3 +38,13 @@ export async function fetchCurrentMember(): Promise<Member | null> {
         return null;
     }
 }
+
+export function logout(): void {
+    if (typeof window !== "undefined") {
+        // Clear tokens from localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        // Redirect to home page
+        window.location.href = "/";
+    }
+}

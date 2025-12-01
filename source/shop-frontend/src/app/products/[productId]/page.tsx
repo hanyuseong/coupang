@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { FooterLinks } from "@/components/footer-links";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { fetchCart, fetchProduct, fetchRecommendedKeywords } from "@/lib/api";
 import { calcDiscountPercent, formatCurrency, getImageUrl } from "@/lib/utils";
 
@@ -27,6 +28,13 @@ export default async function ProductDetailPage({
 
     const discount = calcDiscountPercent(product.price, product.discountPrice);
 
+    // Prepare image array from product
+    const productImages = product.images && product.images.length > 0
+        ? product.images
+        : product.thumbnail
+            ? [product.thumbnail]
+            : [];
+
     return (
         <div className="min-h-screen bg-white">
             <SiteHeader
@@ -40,20 +48,11 @@ export default async function ProductDetailPage({
                     {/* Image Section */}
                     <div className="sticky top-24 h-fit">
                         <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-slate-100 bg-coupang-gray">
-                            {product.thumbnail ? (
-                                <Image
-                                    src={getImageUrl(product.thumbnail, product.productId)}
-                                    alt={product.name}
-                                    fill
-                                    className="object-cover"
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
-                                    priority
-                                />
-                            ) : (
-                                <div className="flex h-full items-center justify-center text-slate-400">
-                                    이미지 준비중
-                                </div>
-                            )}
+                            <ProductImageCarousel
+                                images={productImages}
+                                productId={product.productId}
+                                productName={product.name}
+                            />
                         </div>
                     </div>
 
