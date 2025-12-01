@@ -8,6 +8,8 @@ uploads/
 
 # Temporary files
 *.sql
+!shop-backend/src/main/resources/schema.sql
+!shop-backend/src/main/resources/data.sql
 
 # Java compiled files
 *.class
