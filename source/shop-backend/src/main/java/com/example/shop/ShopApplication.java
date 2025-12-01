@@ -12,8 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class ShopApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ShopApplication.class, args);   
-        
+        SpringApplication.run(ShopApplication.class, args);
+
     }
 }
- 
