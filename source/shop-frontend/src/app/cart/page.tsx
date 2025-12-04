@@ -13,6 +13,7 @@ export default function CartPage() {
     const [cart, setCart] = useState<Cart | null>(null);
     const [recommendedKeywords, setRecommendedKeywords] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedItemIds, setSelectedItemIds] = useState<Set<number>>(new Set());
 
     useEffect(() => {
         async function loadData() {
@@ -23,6 +24,12 @@ export default function CartPage() {
                 ]);
                 setCart(cartData);
                 setRecommendedKeywords(keywordsData);
+
+                // 초기 로드 시 모든 아이템 선택
+                if (cartData?.cartItems) {
+                    const allIds = new Set(cartData.cartItems.map(item => item.cartItemId));
+                    setSelectedItemIds(allIds);
+                }
             } catch (error) {
                 console.error("Failed to load cart data", error);
             } finally {
@@ -38,6 +45,12 @@ export default function CartPage() {
             if (success) {
                 const updatedCart = await fetchCart();
                 setCart(updatedCart);
+                // 삭제된 아이템은 선택 목록에서도 제거
+                setSelectedItemIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(cartItemId);
+                    return next;
+                });
             } else {
                 console.error('Delete failed: success is false');
                 alert("삭제에 실패했습니다.");
@@ -64,6 +77,59 @@ export default function CartPage() {
         }
     };
 
+    const handleCheckItem = (cartItemId: number, checked: boolean) => {
+        setSelectedItemIds(prev => {
+            const next = new Set(prev);
+            if (checked) {
+                next.add(cartItemId);
+            } else {
+                next.delete(cartItemId);
+            }
+            return next;
+        });
+    };
+
+    const handleCheckAll = (checked: boolean) => {
+        if (checked && cart?.cartItems) {
+            const allIds = new Set(cart.cartItems.map(item => item.cartItemId));
+            setSelectedItemIds(allIds);
+        } else {
+            setSelectedItemIds(new Set());
+        }
+    };
+
+    const handleCheckout = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (selectedItemIds.size === 0) {
+            alert("주문할 상품을 선택해주세요.");
+            return;
+        }
+
+        // 선택된 아이템 ID들을 로컬 스토리지에 저장
+        localStorage.setItem("checkout_selected_items", JSON.stringify(Array.from(selectedItemIds)));
+
+        // 선택된 아이템의 상세 정보(productId, optionStockId) 저장 (로그인 시 병합 후 매칭을 위해)
+        if (cart?.cartItems) {
+            const selectedProducts = cart.cartItems
+                .filter(item => selectedItemIds.has(item.cartItemId))
+                .map(item => ({
+                    productId: item.productId,
+                    optionStockId: item.optionStockId
+                }));
+            localStorage.setItem("checkout_selected_products", JSON.stringify(selectedProducts));
+        }
+
+        // 로그인 여부 확인
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            // 로그인되어 있지 않으면 로그인 페이지로 이동 (redirect 파라미터 포함)
+            window.location.href = "/login?redirect=/checkout";
+        } else {
+            // 로그인되어 있으면 결제 페이지로 이동
+            window.location.href = "/checkout";
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-coupang-gray">
@@ -76,12 +142,16 @@ export default function CartPage() {
     }
 
     const items = cart?.cartItems ?? [];
-    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-    const subtotal =
-        cart?.totalAmount ??
-        items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const deliveryFee = cart?.deliveryFee ?? 0;
+    const itemCount = items.length;
+
+    // 선택된 아이템만 계산
+    const selectedItems = items.filter(item => selectedItemIds.has(item.cartItemId));
+    const selectedCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const deliveryFee = cart?.deliveryFee ?? 0; // 배송비 로직은 복잡할 수 있으니 일단 전체 기준 유지하거나, 필요시 수정 (여기서는 단순 유지)
     const total = subtotal + deliveryFee;
+
+    const isAllSelected = items.length > 0 && selectedItemIds.size === items.length;
 
     return (
         <div className="min-h-screen bg-coupang-gray">
@@ -112,6 +182,21 @@ export default function CartPage() {
 
                 <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
                     <section className="space-y-4">
+                        {items.length > 0 && (
+                            <div className="flex items-center gap-2 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                                <input
+                                    type="checkbox"
+                                    checked={isAllSelected}
+                                    onChange={(e) => handleCheckAll(e.target.checked)}
+                                    className="h-5 w-5 rounded border-gray-300 text-coupang-blue focus:ring-coupang-blue"
+                                    id="check-all"
+                                />
+                                <label htmlFor="check-all" className="text-sm font-bold text-slate-700 cursor-pointer select-none">
+                                    전체선택 ({selectedItemIds.size}/{items.length})
+                                </label>
+                            </div>
+                        )}
+
                         {items.length === 0 ? (
                             <div className="rounded-2xl border border-slate-100 bg-white p-10 text-center shadow-sm">
                                 <p className="text-lg font-bold text-slate-800">장바구니가 비었어요.</p>
@@ -134,6 +219,8 @@ export default function CartPage() {
                                     item={item}
                                     onRemove={handleRemoveItem}
                                     onUpdateQuantity={handleUpdateQuantity}
+                                    checked={selectedItemIds.has(item.cartItemId)}
+                                    onCheck={(checked) => handleCheckItem(item.cartItemId, checked)}
                                 />
                             ))
                         )}
@@ -143,7 +230,7 @@ export default function CartPage() {
                         <h2 className="text-lg font-bold text-slate-800">결제 예정 금액</h2>
                         <div className="mt-4 space-y-3 text-sm text-slate-700">
                             <div className="flex justify-between">
-                                <span>상품금액</span>
+                                <span>상품금액 ({selectedCount}개)</span>
                                 <span className="font-semibold">{formatCurrency(subtotal)}</span>
                             </div>
                             <div className="flex justify-between">
@@ -158,12 +245,12 @@ export default function CartPage() {
                             </div>
                         </div>
 
-                        <Link
-                            href="/checkout"
+                        <button
+                            onClick={handleCheckout}
                             className="mt-6 w-full block rounded-lg bg-coupang-blue py-3 text-lg font-bold text-white text-center shadow-md transition hover:bg-coupang-navy"
                         >
-                            결제하기
-                        </Link>
+                            결제하기 ({selectedItemIds.size}개)
+                        </button>
                         <p className="mt-2 text-xs text-slate-500 text-center">
                             쿠폰/할인은 결제 단계에서 적용돼요.
                         </p>

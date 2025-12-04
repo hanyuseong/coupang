@@ -14,8 +14,11 @@ public class Cart extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
+    @Column(name = "session_id")
+    private String sessionId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = true)
     private Member member;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -28,12 +31,24 @@ public class Cart extends BaseEntity {
         this.member = member;
     }
 
+    public Cart(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     public Long getCartId() {
         return cartId;
     }
 
     public void setCartId(Long cartId) {
         this.cartId = cartId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public Member getMember() {

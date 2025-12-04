@@ -23,33 +23,30 @@ public class CartController {
         this.memberRepository = memberRepository;
     }
 
-    private Long getMemberId(Object principal) {
+    private Long getMemberIdOrNull(Object principal) {
         if (principal == null || "anonymousUser".equals(principal)) {
-            throw new com.example.shop.global.exception.BusinessException(
-                    com.example.shop.global.exception.ErrorCode.UNAUTHORIZED);
+            return null;
         }
         String email = (String) principal;
         return memberRepository.findByEmail(email)
                 .map(com.example.shop.domain.member.entity.Member::getMemberId)
-                .orElseThrow(() -> new com.example.shop.global.exception.BusinessException(
-                        com.example.shop.global.exception.ErrorCode.MEMBER_NOT_FOUND));
+                .orElse(null);
     }
 
     @GetMapping
-    public ApiResponse<CartDto> getCart(@AuthenticationPrincipal Object principal) {
-        if (principal == null || "anonymousUser".equals(principal)) {
-            return ApiResponse.ok(new CartDto());
-        }
-        Long memberId = getMemberId(principal);
-        CartDto cart = cartService.getCart(memberId);
+    public ApiResponse<CartDto> getCart(@AuthenticationPrincipal Object principal,
+            @RequestHeader(value = "X-Cart-Session-Id", required = false) String sessionId) {
+        Long memberId = getMemberIdOrNull(principal);
+        CartDto cart = cartService.getCart(memberId, sessionId);
         return ApiResponse.ok(cart);
     }
 
     @PostMapping
     public ApiResponse<String> addToCart(@AuthenticationPrincipal Object principal,
+            @RequestHeader(value = "X-Cart-Session-Id", required = false) String sessionId,
             @RequestBody CartAddRequest req) {
-        Long memberId = getMemberId(principal);
-        cartService.addToCart(memberId, req);
+        Long memberId = getMemberIdOrNull(principal);
+        cartService.addToCart(memberId, sessionId, req);
         return ApiResponse.ok("Item added to cart successfully");
     }
 

@@ -17,6 +17,7 @@ public enum ErrorCode {
     POINTS_NOT_ENOUGH("POINTS_NOT_ENOUGH", "Not enough points."),
     UNAUTHORIZED("UNAUTHORIZED", "Unauthorized access."),
     FORBIDDEN("FORBIDDEN", "Access is forbidden."),
+    BAD_REQUEST("BAD_REQUEST", "Bad request."),
     INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "Internal server error.");
 
     private final String code;

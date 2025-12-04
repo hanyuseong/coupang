@@ -20,7 +20,56 @@ export default function CheckoutPage() {
         async function loadCart() {
             try {
                 const cartData = await fetchCart();
-                setCart(cartData);
+
+                // 로컬 스토리지에서 선택된 아이템 ID 가져오기
+                const selectedIdsJson = localStorage.getItem("checkout_selected_items");
+                const selectedProductsJson = localStorage.getItem("checkout_selected_products");
+
+                let filteredItems: any[] = [];
+
+                if (cartData.cartItems) {
+                    // 1. ID 기반 매칭
+                    if (selectedIdsJson) {
+                        try {
+                            const selectedIds = new Set(JSON.parse(selectedIdsJson));
+                            filteredItems = cartData.cartItems.filter(item => selectedIds.has(item.cartItemId));
+                        } catch (e) {
+                            console.error("Failed to parse selected items", e);
+                        }
+                    }
+
+                    // 2. 상품 정보 기반 매칭 (ID 매칭 결과가 없으면 시도)
+                    if (filteredItems.length === 0 && selectedProductsJson) {
+                        try {
+                            const selectedProducts = JSON.parse(selectedProductsJson);
+                            filteredItems = cartData.cartItems.filter(item =>
+                                selectedProducts.some((p: any) =>
+                                    p.productId === item.productId &&
+                                    (p.optionStockId === item.optionStockId || (p.optionStockId === null && item.optionStockId === null))
+                                )
+                            );
+                        } catch (e) {
+                            console.error("Failed to parse selected products", e);
+                        }
+                    }
+
+                    // 필터링된 아이템이 있으면 카트 데이터 업데이트
+                    if (filteredItems.length > 0) {
+                        // 금액 재계산
+                        const newTotalAmount = filteredItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+                        setCart({
+                            ...cartData,
+                            cartItems: filteredItems,
+                            totalAmount: newTotalAmount
+                        });
+                    } else {
+                        // 선택된 아이템이 없으면 전체 카트 사용
+                        setCart(cartData);
+                    }
+                } else {
+                    setCart(cartData);
+                }
             } catch (error) {
                 console.error("Failed to load cart", error);
             } finally {
@@ -54,6 +103,9 @@ export default function CheckoutPage() {
             console.log('Order creation result:', result);
 
             if (result.success && result.orderId) {
+                // 결제 성공 시 로컬 스토리지 정리
+                localStorage.removeItem("checkout_selected_items");
+
                 // 주문 성공 시 완료 페이지로 이동
                 router.push(`/order-complete/${result.orderId}`);
             } else {
@@ -100,7 +152,7 @@ export default function CheckoutPage() {
         return (
             <div className="flex min-h-screen items-center justify-center bg-coupang-gray">
                 <div className="text-center">
-                    <p className="text-lg font-bold text-slate-800">장바구니가 비어있습니다.</p>
+                    <p className="text-lg font-bold text-slate-800">주문할 상품이 없습니다.</p>
                     <Link href="/" className="mt-4 inline-block text-coupang-blue hover:underline">
                         쇼핑 계속하기
                     </Link>
@@ -128,7 +180,7 @@ export default function CheckoutPage() {
                     <div className="space-y-6">
                         {/* 주문 상품 */}
                         <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-                            <h2 className="text-lg font-bold text-slate-800 mb-4">주문 상품</h2>
+                            <h2 className="text-lg font-bold text-slate-800 mb-4">주문 상품 ({items.length}개)</h2>
                             <div className="space-y-3">
                                 {items.map((item) => (
                                     <div key={item.cartItemId} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">

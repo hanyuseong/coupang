@@ -42,14 +42,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto getCart(Long memberId) {
-        Cart cart = findCartOrCreate(memberId);
+    public CartDto getCart(Long memberId, String sessionId) {
+        Cart cart = findCartOrCreate(memberId, sessionId);
         return new CartDto(cart);
     }
 
     @Override
-    public void addToCart(Long memberId, CartAddRequest request) {
-        Cart cart = findCartOrCreate(memberId);
+    public void addToCart(Long memberId, String sessionId, CartAddRequest request) {
+        Cart cart = findCartOrCreate(memberId, sessionId);
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
@@ -104,31 +104,76 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-    private Cart createCart(Long memberId) {
+    private Cart createMemberCart(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
         Cart cart = new Cart(member);
         return cartRepository.save(cart);
     }
 
-    private Cart findCartOrCreate(Long memberId) {
-        if (memberId != null) {
-            return cartRepository.findFirstByMember_MemberId(memberId)
-                    .orElseGet(() -> createCart(memberId));
-        }
+    private Cart createSessionCart(String sessionId) {
+        Cart cart = new Cart(sessionId);
+        return cartRepository.save(cart);
+    }
 
-        // When unauthenticated: use the first cart (prefer one with items), otherwise
-        // create a cart for the first member.
-        return cartRepository.findAll().stream()
-                .sorted((a, b) -> Boolean.compare(b.getCartItems() != null && !b.getCartItems().isEmpty(),
-                        a.getCartItems() != null && !a.getCartItems().isEmpty()))
-                .findFirst()
-                .orElseGet(() -> {
-                    Member firstMember = memberRepository.findAll().stream()
-                            .findFirst()
-                            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
-                    return createCart(firstMember.getMemberId());
+    private Cart findCartOrCreate(Long memberId, String sessionId) {
+        if (memberId != null) {
+            // 1. 회원 장바구니 조회 또는 생성
+            Cart memberCart = cartRepository.findFirstByMember_MemberId(memberId)
+                    .orElseGet(() -> createMemberCart(memberId));
+
+            // 2. 세션 장바구니가 있다면 병합 (로그인 직후 시나리오)
+            if (sessionId != null && !sessionId.isEmpty()) {
+                cartRepository.findFirstBySessionId(sessionId).ifPresent(sessionCart -> {
+                    mergeCarts(memberCart, sessionCart);
+                    cartRepository.delete(sessionCart); // 병합 후 세션 장바구니 삭제
+                    cartRepository.save(memberCart);
                 });
+            }
+            return memberCart;
+        } else if (sessionId != null && !sessionId.isEmpty()) {
+            // 3. 비회원: 세션 장바구니 조회 또는 생성
+            return cartRepository.findFirstBySessionId(sessionId)
+                    .orElseGet(() -> createSessionCart(sessionId));
+        } else {
+            throw new BusinessException(ErrorCode.BAD_REQUEST); // 둘 다 없으면 에러
+        }
+    }
+
+    private void mergeCarts(Cart memberCart, Cart sessionCart) {
+        for (CartItem sessionItem : sessionCart.getCartItems()) {
+            // 중복 상품 확인
+            CartItem existing = memberCart.getCartItems().stream()
+                    .filter(item -> item.getProduct().getProductId().equals(sessionItem.getProduct().getProductId()))
+                    .filter(item -> {
+                        if (sessionItem.getOptionStock() == null) {
+                            return item.getOptionStock() == null;
+                        }
+                        return item.getOptionStock() != null &&
+                                item.getOptionStock().getOptionStockId()
+                                        .equals(sessionItem.getOptionStock().getOptionStockId());
+                    })
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing != null) {
+                existing.setQuantity(existing.getQuantity() + sessionItem.getQuantity());
+                // sessionItem은 삭제될 예정이므로 관계 끊기 불필요하지만 명시적으로 처리 가능
+            } else {
+                // 새로운 아이템으로 복사해서 추가 (JPA 관계 재설정)
+                CartItem newItem = CartItem.builder()
+                        .cart(memberCart)
+                        .product(sessionItem.getProduct())
+                        .optionStock(sessionItem.getOptionStock())
+                        .price(sessionItem.getPrice())
+                        .quantity(sessionItem.getQuantity())
+                        .build();
+                memberCart.addCartItem(newItem);
+            }
+        }
+        // sessionCart의 아이템들은 orphanRemoval=true에 의해 Cart 삭제 시 같이 삭제됨
+        // 하지만 여기서 명시적으로 리스트를 비워주는 것이 안전할 수 있음
+        sessionCart.getCartItems().clear();
     }
 
     @Override

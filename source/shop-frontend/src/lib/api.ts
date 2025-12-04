@@ -10,6 +10,16 @@ import { ApiResponse, Cart, Category, Order, Product, Review, Promotion } from "
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
 
+function getCartSessionId(): string {
+  if (typeof window === "undefined") return "";
+  let sessionId = localStorage.getItem("cart_session_id");
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    localStorage.setItem("cart_session_id", sessionId);
+  }
+  return sessionId;
+}
+
 async function safeRequest<T>(path: string, init?: RequestInit): Promise<T | null> {
   try {
     const headers: HeadersInit = {
@@ -21,6 +31,11 @@ async function safeRequest<T>(path: string, init?: RequestInit): Promise<T | nul
       const token = localStorage.getItem("accessToken");
       if (token) {
         (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+      }
+
+      const sessionId = getCartSessionId();
+      if (sessionId) {
+        (headers as Record<string, string>)["X-Cart-Session-Id"] = sessionId;
       }
     }
 
