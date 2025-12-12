@@ -25,6 +25,10 @@ public class Member extends BaseEntity {
     private String name;
     private String phone;
 
+    // OAuth2 fields
+    private String provider;
+    private String providerId;
+
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 }

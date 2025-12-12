@@ -7,8 +7,15 @@ import {
 } from "./fallback-data";
 import { ApiResponse, Cart, Category, Order, Product, Review, Promotion } from "./types";
 
+import { AppStore } from "./store";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+
+export let appStore: AppStore | null = null;
+export const injectStore = (store: AppStore) => {
+  appStore = store;
+};
 
 function getCartSessionId(): string {
   if (typeof window === "undefined") return "";
@@ -28,7 +35,7 @@ async function safeRequest<T>(path: string, init?: RequestInit): Promise<T | nul
     };
 
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("accessToken");
+      const token = appStore?.getState().auth.accessToken;
       if (token) {
         (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
       }
