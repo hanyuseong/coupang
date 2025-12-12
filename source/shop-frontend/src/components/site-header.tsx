@@ -2,14 +2,16 @@
 
 import { SearchBar } from "./search-bar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { fetchCurrentMember, logout } from "@/lib/member-api";
-import { fetchCart } from "@/lib/api";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { fetchCartAsync } from "@/lib/features/cartSlice";
+import { setUser, logout as logoutAction } from "@/lib/features/authSlice";
+import { fetchCurrentMember } from "@/lib/member-api";
 
 type SiteHeaderProps = {
   suggestionKeywords: string[];
   recommendedKeywords?: string[];
-  cartCount: number;
+  cartCount?: number;
   initialIsLoggedIn?: boolean;
   initialUserName?: string;
 };
@@ -17,53 +19,31 @@ type SiteHeaderProps = {
 export function SiteHeader({
   suggestionKeywords,
   recommendedKeywords = [],
-  cartCount: initialCartCount,
-  initialIsLoggedIn = false,
-  initialUserName = "",
 }: SiteHeaderProps) {
-  const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
-  const [userName, setUserName] = useState(initialUserName);
-  const [cartCount, setCartCount] = useState(initialCartCount);
+  const dispatch = useAppDispatch();
+
+  // Redux에서 장바구니 및 인증 상태 조회
+  const cartItems = useAppSelector((state) => state.cart.items?.cartItems);
+  const cartCount = cartItems?.length ?? 0;
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    const updateCartCount = async () => {
-      try {
-        const cart = await fetchCart();
-        setCartCount(cart.cartItems?.length ?? 0);
-      } catch (error) {
-        console.error("Failed to update cart count:", error);
-      }
-    };
+    // 앱 시작 시 장바구니 로드
+    dispatch(fetchCartAsync());
 
-    // Initial fetch to ensure sync
-    updateCartCount();
-
-    const handleCartUpdate = () => {
-      updateCartCount();
-    };
-
-    window.addEventListener("cart-updated", handleCartUpdate);
-    return () => {
-      window.removeEventListener("cart-updated", handleCartUpdate);
-    };
-  }, []);
-
-  useEffect(() => {
+    // 앱 시작 시 유저 정보 로드
     const loadUser = async () => {
       const member = await fetchCurrentMember();
-      if (member) {
-        setIsLoggedIn(true);
-        setUserName(member.name);
-      } else {
-        setIsLoggedIn(false);
-        setUserName("");
-      }
+      dispatch(setUser(member));
     };
     loadUser();
-  }, []);
+  }, [dispatch]);
 
   const handleLogout = () => {
-    logout();
+    dispatch(logoutAction());
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -85,9 +65,9 @@ export function SiteHeader({
           <div className="hidden flex-col items-end gap-2 text-sm font-medium lg:flex">
             {/* 로그인 상태 표시 영역 */}
             <div className="flex items-center gap-2 text-sm text-white/90">
-              {isLoggedIn ? (
+              {isAuthenticated ? (
                 <>
-                  <span className="font-medium">{userName}님 환영합니다.</span>
+                  <span className="font-medium">{user?.name}님 환영합니다.</span>
                   <button
                     onClick={handleLogout}
                     className="rounded bg-white/20 px-3 py-1 text-xs hover:bg-white/30 transition"
@@ -104,7 +84,7 @@ export function SiteHeader({
 
             {/* 네비게이션 메뉴 */}
             <div className="flex items-center gap-6">
-              <Link href={isLoggedIn ? "/orders" : "/login"} className="flex flex-col items-center gap-1 text-white/80">
+              <Link href={isAuthenticated ? "/orders" : "/login"} className="flex flex-col items-center gap-1 text-white/80">
                 <span className="rounded-lg bg-white/15 px-2 py-1 text-[10px]">주문</span>
                 <span>마이한스</span>
               </Link>

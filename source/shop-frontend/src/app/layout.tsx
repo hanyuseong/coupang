@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "@/providers/store-provider";
 
 const notoSans = Noto_Sans_KR({
   subsets: ["latin"],
@@ -23,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${notoSans.variable} font-sans`}>{children}</body>
+      <body className={`${notoSans.variable} font-sans`}>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   );
 }

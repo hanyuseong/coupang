@@ -163,13 +163,7 @@ export async function addCartItem(
     body: JSON.stringify(body),
   });
 
-  if (payload?.success) {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("cart-updated"));
-    }
-    return true;
-  }
-  return false;
+  return payload?.success ?? false;
 }
 
 export async function removeCartItem(cartItemId: number): Promise<boolean> {

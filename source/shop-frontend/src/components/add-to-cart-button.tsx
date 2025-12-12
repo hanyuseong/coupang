@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addCartItem } from "@/lib/api";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { fetchCartAsync } from "@/lib/features/cartSlice";
 
 type AddToCartButtonProps = {
   productId: number;
@@ -20,6 +22,8 @@ export function AddToCartButton({
   redirect = true,
 }: AddToCartButtonProps) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const [loading, setLoading] = useState(false);
 
   const handleClick = async (e: React.MouseEvent) => {
@@ -29,18 +33,19 @@ export function AddToCartButton({
     try {
       const ok = await addCartItem(productId, quantity, optionStockId);
       if (ok) {
-        router.refresh();
         if (redirect) {
           router.push("/cart");
         } else {
           if (confirm("상품을 장바구니에 담았습니다. 장바구니로 이동하시겠습니까?")) {
             router.push("/cart");
+          } else {
+            // Redux로 장바구니 상태 갱신
+            dispatch(fetchCartAsync());
           }
         }
       } else {
         // Check if user is logged in
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
+        if (!isAuthenticated) {
           if (confirm("로그인이 필요한 서비스입니다. 로그인 하시겠습니까?")) {
             router.push("/login");
           }
