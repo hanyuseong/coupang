@@ -2,7 +2,9 @@ import { Member } from "./types";
 import { appStore } from "./api";
 
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+    typeof window === "undefined"
+        ? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
+        : "";
 
 export async function fetchCurrentMember(): Promise<Member | null> {
     try {
@@ -37,8 +39,15 @@ export async function fetchCurrentMember(): Promise<Member | null> {
     }
 }
 
-export function logout(): void {
+export async function logout(): Promise<void> {
     if (typeof window !== "undefined") {
+        // Clear HttpOnly Cookie
+        try {
+            await fetch("/api/auth/logout", { method: "POST" });
+        } catch (e) {
+            console.error("Failed to call logout API", e);
+        }
+
         // Clear tokens from localStorage (just in case)
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");

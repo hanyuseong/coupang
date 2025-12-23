@@ -10,7 +10,9 @@ import { ApiResponse, Cart, Category, Order, Product, Review, Promotion } from "
 import { AppStore } from "./store";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+  typeof window === "undefined"
+    ? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080"
+    : "";
 
 export let appStore: AppStore | null = null;
 export const injectStore = (store: AppStore) => {
@@ -264,11 +266,21 @@ export type AuthResponse = {
 };
 
 export async function login(email: string, password: string): Promise<AuthResponse | null> {
-  const payload = await safeRequest<ApiResponse<AuthResponse>>("/api/auth/login", {
+  // Call Next.js Route Handler to set HttpOnly cookie
+  const response = await fetch("/api/auth/login", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ email, password }),
   });
-  return payload?.data ?? null;
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const result = await response.json();
+  return result.success ? result.data : null;
 }
 
 export type SignupRequest = {

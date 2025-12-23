@@ -18,6 +18,15 @@ export default function OAuth2CallbackPage() {
             // 1. Save accessToken to Redux
             dispatch(setAccessToken(accessToken));
 
+            // 1-1. Save accessToken to HttpOnly Cookie (via API route)
+            fetch("/api/auth/set-token", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ accessToken }),
+            }).catch(console.error);
+
             // Clear any tokens in localStorage (cleanup)
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
